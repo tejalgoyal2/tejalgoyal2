@@ -9,7 +9,7 @@
 # and build tools to make that process visible.
 ```
 
-> **`STATUS:`** `Security Co-op` **`|`** `Training for TC10K` **`|`** `Building Meme Finder`
+> **`STATUS:`** `Security Co-op` **`·`** `Training for TC10K` **`·`** `Building Meme Finder`
 
 ---
 
@@ -19,8 +19,8 @@
 
 | Project | Stack | What It Does | Links |
 | :--- | :--- | :--- | :--- |
-| **IAM Threat Mapper** | `React` `Cytoscape.js` | Interactive attack path visualizer mapping MITRE ATT&CK techniques to IAM vulnerabilities. 5 real breach case studies. | [live](https://iam.tgoyal.me) | [repo](https://github.com/tejalgoyal2/iam-threat-mapper) |
-| **WalletRIP** | `Next.js` `Supabase` `Gemini` | AI expense tracker with natural language entry, synthetic identity architecture, and an AI spending roast. | [live](https://walletrip.vercel.app) | [repo](https://github.com/tejalgoyal2/WalletRIP) |
+| **IAM Threat Mapper** | `React` `Cytoscape.js` | Interactive attack path visualizer mapping MITRE ATT&CK techniques to IAM vulnerabilities. 5 real breach case studies. | [live](https://iam.tgoyal.me) · [repo](https://github.com/tejalgoyal2/iam-threat-mapper) |
+| **WalletRIP** | `Next.js` `Supabase` `Gemini` | AI expense tracker with natural language entry, synthetic identity architecture, and an AI spending roast. | [live](https://walletrip.vercel.app) · [repo](https://github.com/tejalgoyal2/WalletRIP) |
 | **SmartHire** | `Flask` `spaCy` `MongoDB` | AI resume screening — TF-IDF + cosine similarity matches applicants to job descriptions in <15 seconds. | [repo](https://github.com/tejalgoyal2/SmartHire) |
 | **Phishing Classifier** | `Scikit-learn` `NLTK` | ML pipeline achieving 98.7% accuracy and 0.999 AUC-ROC classifying phishing emails across 82K+ samples. | [repo](https://github.com/tejalgoyal2) |
 | **OccluSense** | `YOLOv5` `PyTorch` | Occluded object detection for autonomous vehicles — transfer learning on custom traffic dataset. | [repo](https://github.com/tejalgoyal2/OccluSense) |
