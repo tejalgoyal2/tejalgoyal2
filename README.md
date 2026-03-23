@@ -1,56 +1,65 @@
 # `TG://` TEJAL GOYAL
+
 ### `> Builder of Things`
 
 ```bash
 #!/bin/bash
-# MEng student at UVic.
-# Building security infrastructure by day, ML systems by night.
-# I break things to understand how to protect them — and build tools to make that process visible.
+# MEng student at UVic. Cybersecurity co-op by day, ML systems by night.
+# I break things to understand how to protect them —
+# and build tools to make that process visible.
 ```
 
-> **`STATUS:`** `Cybersecurity Co-op @ BCI | Training for TC10K | Building Meme Finder`
-
----
-
-### `> ./experience.sh`
-`// where I've applied the skills`
-
-* 🟢 **Cybersecurity & Risk Co-op @ BCI** | *Jan 2026 - Present*
-  *Identity & Access Management, Endpoint Detection & Response, Security Operations, and SIEM monitoring.*
-* 🔵 **Research Intern (Federated Learning) @ IIT Ropar** | *Jan 2024 - Jul 2024*
-  *Implemented federated learning algorithms and explored model robustness under non-IID distributions.*
+> **`STATUS:`** `Security Co-op` **`|`** `Training for TC10K` **`|`** `Building Meme Finder`
 
 ---
 
 ### `> ls -la ~/projects/`
+
 `// things I've built and broken`
 
-| Project | Tech Stack | Description |
-| :--- | :--- | :--- |
-| **[IAM Threat Mapper](https://github.com/tejalgoyal2/iam-threat-mapper)** | `React`, `Cytoscape.js` | Interactive attack path visualizer mapping MITRE ATT&CK techniques to IAM vulnerabilities. |
-| **[SmartHire](https://github.com/tejalgoyal2/SmartHire)** | `Flask`, `spaCy`, `MongoDB` | AI resume screening system matching applicants to job descriptions via NLP similarity scoring in <15s. |
-| **[WalletRIP](https://github.com/tejalgoyal2/WalletRIP)** | `Next.js`, `Supabase`, `Gemini API` | AI-powered financial tracker with natural language expense entry and identity protection architecture. |
-| **[OccluSense](https://github.com/tejalgoyal2/OccluSense)** | `YOLOv5`, `PyTorch` | Occluded object detection for autonomous vehicles using transfer learning on a custom traffic dataset. |
+| Project | Stack | What It Does | Links |
+| :--- | :--- | :--- | :--- |
+| **IAM Threat Mapper** | `React` `Cytoscape.js` | Interactive attack path visualizer mapping MITRE ATT&CK techniques to IAM vulnerabilities. 5 real breach case studies. | [live](https://iam.tgoyal.me) | [repo](https://github.com/tejalgoyal2/iam-threat-mapper) |
+| **WalletRIP** | `Next.js` `Supabase` `Gemini` | AI expense tracker with natural language entry, synthetic identity architecture, and an AI spending roast. | [live](https://walletrip.vercel.app) | [repo](https://github.com/tejalgoyal2/WalletRIP) |
+| **SmartHire** | `Flask` `spaCy` `MongoDB` | AI resume screening — TF-IDF + cosine similarity matches applicants to job descriptions in <15 seconds. | [repo](https://github.com/tejalgoyal2/SmartHire) |
+| **Phishing Classifier** | `Scikit-learn` `NLTK` | ML pipeline achieving 98.7% accuracy and 0.999 AUC-ROC classifying phishing emails across 82K+ samples. | [repo](https://github.com/tejalgoyal2) |
+| **OccluSense** | `YOLOv5` `PyTorch` | Occluded object detection for autonomous vehicles — transfer learning on custom traffic dataset. | [repo](https://github.com/tejalgoyal2/OccluSense) |
+| **AI Smart Glasses** | `RPi` `CV` `OCR` `TTS` | Assistive wearable for visually impaired — real-time object detection and text-to-speech on edge hardware. 12-month funded capstone. | [demo](https://youtu.be/N-yQPtAVEQw) |
+
+> `[COMING SOON]` **Meme Finder** — CV-powered expression-to-meme matching. Analyze your face, get the perfect meme.
 
 ---
 
 ### `> cat skills.json`
-`// core technical competencies`
 
 ```json
 {
-  "Security": ["IAM Platforms", "EDR Solutions", "SIEM", "Zero Trust"],
+  "Security":         ["IdP & IAM", "EDR", "SIEM/SOAR", "Zero Trust", "IR"],
   "Machine_Learning": ["PyTorch", "Scikit-learn", "YOLOv5", "spaCy", "Federated Learning"],
-  "Development": ["Python", "JS/TS", "React", "Next.js", "Flask"],
-  "DevOps_and_Tools": ["Docker", "Git", "Linux", "PowerShell"]
+  "Development":      ["Python", "JS/TS", "React", "Next.js", "Flask"],
+  "Infra_and_Tools":  ["Docker", "Git", "Linux", "PowerShell", "Chronicle"]
 }
 ```
 
 ---
 
+### `> neofetch`
+
+<div align="center">
+
+<img src="https://github-readme-stats.vercel.app/api?username=tejalgoyal2&show_icons=true&theme=github_dark&hide_border=true&bg_color=0a0a0a&title_color=00ff41&icon_color=00ff41&text_color=c9d1d9&ring_color=00ff41" height="160" />
+<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=tejalgoyal2&layout=compact&theme=github_dark&hide_border=true&bg_color=0a0a0a&title_color=00ff41&text_color=c9d1d9&langs_count=6" height="160" />
+
+</div>
+
+---
+
 ### `> cat about.md`
 
-I am a cybersecurity analyst and data science grad student, originally from India. I've built ML models that catch phishing emails at 98.7% accuracy, deployed enterprise MFA solutions, and led a team engineering assistive AI glasses for the visually impaired. I believe the best way to learn security is to break things — responsibly.
+MEng Applied Data Science @ UVic. BEng Electronics & Computer Engineering @ Thapar Institute. Built ML models that catch phishing emails at 98.7% accuracy, deployed enterprise MFA for 30K+ users, led a team engineering assistive AI glasses for the visually impaired. Founded an NGO that planted 1,000+ trees.
 
-* **`EDUCATION:`** MEng Applied Data Science @ UVic | BEng Electronics & Computer Engineering @ Thapar Institute
-* **`CONNECT:`** [tgoyal.me](https://tgoyal.me) | [LinkedIn](https://linkedin.com/in/tejalgoyal) | [Email](mailto:tejalgoyal@uvic.ca)
+```
+> echo $CONNECT
+```
+
+**[tgoyal.me](https://tgoyal.me)** · **[LinkedIn](https://linkedin.com/in/tejalgoyal)**
