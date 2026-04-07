@@ -50,10 +50,7 @@ soft_skills:   [counting resume characters at 1am, questionable baking ambitions
 
 <div align="center">
 
-<img src="https://github-readme-stats.vercel.app/api?username=tejalgoyal2&show_icons=true&hide_border=true&bg_color=0a0a0a&title_color=d4915a&icon_color=d4915a&text_color=cdc8c2&ring_color=d4915a&rank_icon=github" height="165" />
 <img src="https://streak-stats.demolab.com?user=tejalgoyal2&hide_border=true&background=0A0A0A&ring=D4915A&fire=D4915A&currStreakLabel=CDC8C2&sideLabels=D4915A&currStreakNum=CDC8C2&sideNums=CDC8C2&dates=6E6E6E&stroke=1E1E1E" height="165" />
-
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=tejalgoyal2&layout=compact&hide_border=true&bg_color=0a0a0a&title_color=d4915a&text_color=cdc8c2&langs_count=6" height="140" />
 
 </div>
 
@@ -69,10 +66,7 @@ I also write about what I build on my **[blog](https://tejalgoyal2.github.io)** 
 
 <div align="center">
 
-```
-echo "thanks for scrolling this far. seriously."
-echo "go read the blog. or hire me. or both. both is good."
-```
+Thanks for scrolling this far. Go read the **[blog](https://tejalgoyal2.github.io)**. Or hire me. Or both. Both is good.
 
 **[tgoyal.me](https://tgoyal.me)** · **[blog](https://tejalgoyal2.github.io)** · **[linkedin](https://linkedin.com/in/tejalgoyal)**
 
