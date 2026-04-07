@@ -1,6 +1,6 @@
 <div align="center">
 
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=28&duration=3000&pause=1000&color=D4915A&center=true&vCenter=true&multiline=true&repeat=true&random=false&width=600&height=80&lines=hey%2C+i'm+tejal.;i+build+things+and+break+things.;sometimes+in+that+order.)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Outfit&weight=700&size=32&duration=3000&pause=1200&color=F0EBE5&center=true&vCenter=true&repeat=true&random=false&width=500&height=50&lines=Hey%2C+I'm+Tejal.;I+build+things.;I+break+things.;Sometimes+in+that+order.)](https://git.io/typing-svg)
 
 [![Blog](https://img.shields.io/badge/blog-tejalgoyal2.github.io-d4915a?style=flat-square&logo=jekyll&logoColor=white)](https://tejalgoyal2.github.io)
 [![Portfolio](https://img.shields.io/badge/portfolio-tgoyal.me-7cb8e8?style=flat-square&logo=googlechrome&logoColor=white)](https://tgoyal.me)
@@ -11,13 +11,10 @@
 ---
 
 ```
-MEng student at UVic · Cybersecurity co-op by day · ML systems by night
+MEng Applied Data Science @ UVic (graduating Apr 2026) · Security & ML
 I break things to understand how to protect them — and build tools to make that process visible.
-Currently: applying to jobs, yelling at Ferrari race strategy, considering opening a bakery instead.
+On the side, I'm seriously considering whether a bakery would be less stressful.
 ```
-
-> **If you're hiring** — I'm looking for full-time security/ML roles starting mid-2026.
-> If you're not hiring — we can still talk about why Ferrari keeps doing this to us.
 
 ---
 
@@ -44,7 +41,7 @@ security:      [IdP & IAM, EDR, SIEM/SOAR, Zero Trust, Incident Response]
 ml:            [PyTorch, Scikit-learn, YOLOv5, spaCy, Federated Learning]
 dev:           [Python, JS/TS, React, Next.js, Flask, Swift]
 infra:         [Docker, Git, Linux, PowerShell, Chronicle]
-soft_skills:   [yelling at F1 timing screens, counting resume characters at 1am]
+soft_skills:   [counting resume characters at 1am, questionable baking ambitions]
 ```
 
 ---
