@@ -11,7 +11,7 @@
 ---
 
 ```
-MEng Applied Data Science @ UVic (graduating Apr 2026) · Security & ML
+MEng Applied Data Science @ UVic (graduating Dec 2026) · SWE with Security & ML
 I break things to understand how to protect them — and build tools to make that process visible.
 On the side, I'm seriously considering whether a bakery would be less stressful.
 ```
