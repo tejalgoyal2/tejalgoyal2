@@ -1,4 +1,4 @@
-<a href="https://tgoyal.me"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-dark.svg"><img alt="Tejal Goyal (@tejalgoyal2). Software engineer. I build AI agents, data pipelines, and things that are fun to use. 679 contributions in the last year." src="edition/hero-light.svg" width="100%"></picture></a>
+<a href="https://tgoyal.me"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-dark.svg"><img alt="Tejal Goyal (@tejalgoyal2). Software engineer. I build AI agents, data pipelines, and things that are fun to use. 681 contributions in the last year." src="edition/hero-light.svg" width="100%"></picture></a>
 
 **[Site](https://tgoyal.me)** · **[Blog](https://tejalgoyal2.github.io)** · **[LinkedIn](https://www.linkedin.com/in/tejalgoyal)** · **[Resume](https://tgoyal.me/resume.pdf)** · **[Email](mailto:itejalgoyal@gmail.com)**
 
@@ -38,7 +38,7 @@ I’m a software engineer co-op at BCI, where I build the apps finance and opera
 
 ## This year
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="edition/stats-dark.svg"><img alt="679 contributions, 632 commits and 15 pull requests in the last year." src="edition/stats-light.svg" width="100%"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="edition/stats-dark.svg"><img alt="681 contributions, 634 commits and 15 pull requests in the last year." src="edition/stats-light.svg" width="100%"></picture>
 
 ## More projects
 
