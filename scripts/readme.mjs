@@ -12,49 +12,60 @@ const picture = (base, alt, extra = 'width="100%"') =>
 
 export const cardFile = (name) => `card-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 
-const cardCell = (d) =>
-  `<td width="50%" valign="top"><a href="${esc(d.href)}">${picture(cardFile(d.name), `${d.title}: ${d.blurb}${d.lang ? ` (${d.lang})` : ''}${d.host ? `, live at ${d.host}` : ''}`)}</a></td>`;
+const slug = (k) => k.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+export const linkFile = (label) => `link-${slug(label)}`;
 
-function grid(list) {
-  const rows = [];
-  for (let i = 0; i < list.length; i += 2) rows.push(`<tr>\n${cardCell(list[i])}\n${list[i + 1] ? cardCell(list[i + 1]) : '<td></td>'}\n</tr>`);
-  return `<table>\n${rows.join('\n')}\n</table>`;
-}
+// A card is one image, and it opens the repository: that's where a click on a repo card goes on
+// GitHub, and it keeps people on GitHub. The live site gets its own link right under the cards.
+// Cards flow like text instead of sitting in a table, so two sit side by side on a desktop and
+// they stack, full width and readable, on a phone.
+const cardLink = (d) =>
+  `<a href="${esc(d.repoUrl)}">${picture(cardFile(d.name), `${d.title}: ${d.blurb}${d.lang ? ` (${d.lang})` : ''}${d.host ? `, live at ${d.host}` : ''}. Opens the repository.`, 'width="402"')}</a>`;
+
+const cards = (list) => `<p>\n${list.map(cardLink).join('\n')}\n</p>`;
+
+const liveRow = (list) => {
+  const live = list.filter((d) => d.live && d.homepage);
+  return live.length ? `**Try them live:** ${live.map((d) => `[${md(d.title)} ↗](${d.homepage})`).join(' · ')}\n` : '';
+};
+
+const buttons = (links) =>
+  `<p>\n${Object.keys(links)
+    .map((k) => `<a href="${esc(links[k])}">${picture(linkFile(k), k, 'height="36"')}</a>`)
+    .join('\n')}\n</p>`;
 
 export function readme({ config, now, leads, fresh, brief, wire, calendar, posts, hasStats }) {
   const L = config.links;
   const day = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
   const out = [];
 
+  const latest = wire[0] ? ` Latest push: ${wire[0].repo}: ${wire[0].msg}.` : '';
   out.push(
-    `<a href="${L.Site}">${picture('hero', `${config.name} (@${config.handle}). ${config.tagline}${calendar ? ` ${calendar.total} contributions in the last year.` : ''}`)}</a>\n\n` +
-      Object.entries(L).map(([k, v]) => `**[${k}](${v})**`).join(' · ') +
-      `\n`,
+    `<p>\n${picture('hero-profile', `${config.name} (@${config.handle}). ${config.tagline}${latest}`, 'width="402"')}\n` +
+      (calendar ? `${picture('hero-skyline', `${calendar.total} contributions in the last year, as a skyline of towers: taller means a busier day.`, 'width="402"')}\n` : '') +
+      `</p>\n\n${buttons(L)}\n`,
   );
   out.push(`${config.about}\n`);
 
-  out.push(`## Featured projects\n\n${grid(leads)}\n`);
+  out.push(`## Featured projects\n\n${cards(leads)}\n\n${liveRow(leads)}`);
 
-  if (fresh.length) out.push(`## Recently shipped\n\n<sub>Found by itself: whatever I've pushed to lately shows up here.</sub>\n\n${grid(fresh)}\n`);
+  if (fresh.length) out.push(`## Recently shipped\n\n<sub>Found by itself: whatever I've pushed to lately shows up here.</sub>\n\n${cards(fresh)}\n\n${liveRow(fresh)}`);
 
-  if (wire.length >= 2) {
+  if (wire.length >= 2 || (hasStats && calendar)) {
     out.push(
-      `## Activity\n\n${picture('activity', `Recent commits: ${wire.slice(0, 8).map((c) => `${c.repo}: ${c.msg} (${ago(c.at, now)})`).join('; ')}`)}\n`,
-    );
-  }
-
-  if (hasStats && calendar) {
-    out.push(
-      `## This year\n\n${picture('stats', `${calendar.total} contributions, ${calendar.commits} commits and ${calendar.prs} pull requests in the last year.`)}\n`,
+      `## Activity\n\n<p>\n` +
+        (wire.length >= 2 ? `${picture('activity', `Recent commits: ${wire.slice(0, 6).map((c) => `${c.repo}: ${c.msg} (${ago(c.at, now)})`).join('; ')}`, 'width="402"')}\n` : '') +
+        (hasStats && calendar ? `${picture('stats', `${calendar.total} contributions, ${calendar.commits} commits and ${calendar.prs} pull requests in the last year, with a language breakdown.`, 'width="402"')}\n` : '') +
+        `</p>\n`,
     );
   }
 
   if (brief.length) {
     out.push(
-      `## More projects\n\n| | What it is | Built with | Updated |\n| :-- | :-- | :-- | :-- |\n` +
+      `## More projects\n\n| Project | What it is | Built with |\n| :-- | :-- | :-- |\n` +
         brief
           .slice(0, 16)
-          .map((d) => `| **[${md(d.title)}](${d.href})** | ${md(clip(d.blurb, 150))} | ${d.lang || ''} | ${ago(d.pushed, now)} |`)
+          .map((d) => `| **[${md(d.title)}](${d.repoUrl})**${d.live && d.homepage ? ` · [live ↗](${d.homepage})` : ''} | ${md(clip(d.blurb, 150))} | ${d.lang || ''} |`)
           .join('\n') +
         '\n',
     );

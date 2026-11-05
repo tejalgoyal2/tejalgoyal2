@@ -113,62 +113,88 @@ function skyline(t, weeks, cx, top) {
     .join('');
 }
 
+// The hero is two panels that flow like the cards: side by side on a desktop, stacked (and so
+// twice as readable) on a phone. Each is drawn 640 x 560 with a 10px transparent margin around it.
+const panel = (w, h, title, desc, css, body) => svg(w + 20, h + 20, { title, desc, css }, `<g transform="translate(10 10)">${body}</g>`);
+
 /**
+ * The left panel: who I am, and the latest thing I pushed.
  * @param data {{ name:string, handle:string, tagline:string, chips:string[], avatar?:{mime:string,b64:string},
- *               weeks:{days:{date:string,count:number}[]}[]|null, total?:number, last?:{repo:string,msg:string,at:string,sha:string}|null }}
+ *               last?:{repo:string,msg:string,at:string,sha:string}|null }}
  */
-export function hero(theme, data, now = new Date()) {
+export function heroProfile(theme, data, now = new Date()) {
   const t = THEMES[theme];
-  const W = 1280, H = 528, L = 64;
+  const W = 640, H = 560, L = 40;
   const out = [frame(t, W, H)];
 
-  // who
-  const ax = L + 56, ay = 108;
-  out.push(`<clipPath id="av"><circle cx="${ax}" cy="${ay}" r="52"/></clipPath>`);
+  const ax = L + 46, ay = 92, ar = 44;
+  out.push(`<clipPath id="av"><circle cx="${ax}" cy="${ay}" r="${ar}"/></clipPath>`);
   out.push(
     data.avatar
-      ? `<image clip-path="url(#av)" href="data:${data.avatar.mime};base64,${data.avatar.b64}" x="${ax - 52}" y="${ay - 52}" width="104" height="104"/>`
-      : `<circle cx="${ax}" cy="${ay}" r="52" fill="${t.subtle}"/>` + T('bold', data.name[0], ax, ay + 18, 52, t.fg, { anchor: 'middle' }),
+      ? `<image clip-path="url(#av)" href="data:${data.avatar.mime};base64,${data.avatar.b64}" x="${ax - ar}" y="${ay - ar}" width="${ar * 2}" height="${ar * 2}"/>`
+      : `<circle cx="${ax}" cy="${ay}" r="${ar}" fill="${t.subtle}"/>` + T('bold', data.name[0], ax, ay + 16, 46, t.fg, { anchor: 'middle' }),
   );
-  out.push(`<circle cx="${ax}" cy="${ay}" r="52" fill="none" stroke="${t.border}" stroke-width="3"/>`);
-  const ns = Math.min(58, fitSize('bold', data.name, 400));
-  out.push(T('bold', data.name, ax + 76, ay + 2, ns, t.fg));
-  out.push(T('mono', `@${data.handle}`, ax + 78, ay + 40, 22, t.muted));
+  out.push(`<circle cx="${ax}" cy="${ay}" r="${ar}" fill="none" stroke="${t.border}" stroke-width="3"/>`);
+  const ns = Math.min(50, fitSize('bold', data.name, W - ax - ar - 24 - L - 8));
+  out.push(T('bold', data.name, ax + ar + 22, ay - 2, ns, t.fg));
+  out.push(T('mono', `@${data.handle}`, ax + ar + 24, ay + 32, 20, t.muted));
 
-  const tg = block('text', data.tagline, L, 222, 32, 560, { lead: 43, maxLines: 3 });
+  const tg = block('text', data.tagline, L, 196, 30, W - 2 * L, { lead: 40, maxLines: 3 });
   out.push(path(tg.d, t.fg));
 
-  // chips
   let cx = L;
-  const cy = 222 + tg.height - 12;
+  const cy = 196 + tg.height - 8;
   for (const c of data.chips) {
-    const p = pill(t, c, cx, cy, { color: t.muted, border: t.border, bg: t.subtle, size: 18 });
-    if (cx + p.w > 640) break;
+    const p = pill(t, c, cx, cy, { color: t.muted, border: t.border, bg: t.subtle, size: 16, h: 32 });
+    if (cx + p.w > W - L) break;
     out.push(p.svg);
-    cx += p.w + 10;
+    cx += p.w + 8;
   }
 
-  // the latest commit, as a terminal prints it
+  // the latest push, set the way GitHub sets the latest commit at the top of a repo page
   if (data.last) {
-    const ty = H - 82;
-    out.push(`<rect x="${L}" y="${ty - 28}" width="564" height="82" rx="10" fill="${t.subtle}" stroke="${t.border}" stroke-width="1.5"/>`);
-    out.push(T('mono', '$ git log -1 --oneline', L + 18, ty - 2, 16, t.muted));
-    const sha = data.last.sha.slice(0, 7);
-    const sw = measure('monoBold', sha, 18);
-    out.push(T('monoBold', sha, L + 18, ty + 32, 18, t.yellow));
-    const msg = block('mono', `${data.last.repo}: ${data.last.msg}`, L + 18 + sw + 14, ty + 32, 18, 564 - 18 - sw - 14 - 24, { maxLines: 1 });
-    out.push(path(msg.d, t.fg));
-    out.push(`<rect class="cur" x="${L + 18 + sw + 14 + Math.min(measure('mono', `${data.last.repo}: ${data.last.msg}`, 18), 564 - sw - 56) + 6}" y="${ty + 16}" width="10" height="20" fill="${t.green}"/>`);
+    const bw = W - 2 * L, bh = 124, bx = L, by = H - 30 - bh;
+    out.push(`<circle class="pulse" cx="${bx + 7}" cy="${by - 18}" r="5" fill="${t.green}"/>`);
+    out.push(T('mono', 'LATEST PUSH', bx + 22, by - 13, 14, t.muted, { tracking: 0.14 }));
+    out.push(`<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="12" fill="${t.subtle}" stroke="${t.border}" stroke-width="1.5"/>`);
+    const kx = bx + 28, ky = by + 30;
+    out.push(`<clipPath id="av2"><circle cx="${kx}" cy="${ky}" r="15"/></clipPath>`);
+    out.push(data.avatar ? `<image clip-path="url(#av2)" href="data:${data.avatar.mime};base64,${data.avatar.b64}" x="${kx - 15}" y="${ky - 15}" width="30" height="30"/>` : `<circle cx="${kx}" cy="${ky}" r="15" fill="${t.border}"/>`);
+    out.push(`<circle cx="${kx}" cy="${ky}" r="15" fill="none" stroke="${t.border}" stroke-width="1.5"/>`);
+    let x = bx + 54;
+    for (const [f, txt, col] of [['semibold', data.handle, t.fg], ['text', ' committed to ', t.muted], ['mono', data.last.repo, t.accent], ['text', ` ${ago(data.last.at, now)}`, t.muted]]) {
+      const size = f === 'mono' ? 15 : 17;
+      if (x + measure(f, txt, size) > bx + bw - 110) break; // leave room for the hash
+      out.push(T(f, txt, x, ky + 6, size, col));
+      x += measure(f, txt, size);
+    }
+    const sha = data.last.sha.slice(0, 7), sw = measure('mono', sha, 14) + 20;
+    out.push(`<rect x="${bx + bw - 14 - sw}" y="${by + 14}" width="${r1(sw)}" height="28" rx="8" fill="${t.canvas}" stroke="${t.border}" stroke-width="1.5"/>`);
+    out.push(T('mono', sha, bx + bw - 14 - sw + 10, by + 33, 14, t.muted));
+    out.push(path(block('semibold', data.last.msg, bx + 22, by + 78, 19, bw - 44, { lead: 25, maxLines: 2 }).d, t.fg));
   }
+  const css = `.pulse{animation:pulse 2s ease-in-out infinite}@keyframes pulse{50%{opacity:.3}}`;
+  return panel(W, H, data.name, `${data.name} (@${data.handle}). ${data.tagline}${data.last ? ` Latest push: ${data.last.repo}: ${data.last.msg}.` : ''}`, css, out.join(''));
+}
 
-  // the skyline
-  if (data.weeks) {
-    out.push(skyline(t, data.weeks, 960, 70));
-    if (data.total != null) out.push(T('mono', `${data.total.toLocaleString('en-US')} contributions in the last year`, W - 56, H - 32, 16, t.muted, { anchor: 'end' }));
+/** The right panel: the last year's contributions as a skyline, in GitHub's greens. */
+export function heroSkyline(theme, data) {
+  const t = THEMES[theme];
+  const W = 640, H = 560;
+  const out = [frame(t, W, H)];
+  out.push(T('bold', data.total.toLocaleString('en-US'), 40, 90, 60, t.fg));
+  out.push(T('text', 'contributions in the last year', 40 + measure('bold', data.total.toLocaleString('en-US'), 60) + 16, 88, 20, t.muted));
+  out.push(skyline(t, data.weeks, W / 2, 112));
+  // the legend GitHub puts under its own contribution graph
+  out.push(T('mono', 'Less', 40, H - 28, 14, t.muted));
+  let x = 40 + measure('mono', 'Less', 14) + 10;
+  for (const c of t.contrib) {
+    out.push(`<rect x="${x}" y="${H - 42}" width="14" height="14" rx="3" fill="${c}"/>`);
+    x += 20;
   }
-
-  const css = `.w{animation:wave 7s ease-in-out infinite}@keyframes wave{0%,55%,100%{opacity:1}28%{opacity:.5}}` + `.cur{animation:blink 1.1s steps(1) infinite}@keyframes blink{50%{opacity:0}}`;
-  return svg(W, H, { title: data.name, desc: `${data.name} (@${data.handle}). ${data.tagline} ${data.total != null ? `${data.total} contributions in the last year.` : ''}`, css }, out.join(''));
+  out.push(T('mono', 'More', x + 4, H - 28, 14, t.muted));
+  const css = `.w{animation:wave 7s ease-in-out infinite}@keyframes wave{0%,55%,100%{opacity:1}28%{opacity:.5}}`;
+  return panel(W, H, 'Contributions', `${data.total} contributions in the last year, drawn as an isometric skyline: taller, darker towers are busier days.`, css, out.join(''));
 }
 
 // ─── cover art for repos with nothing to show: a commit grid in the language's colour ─────
@@ -243,19 +269,19 @@ export function card(theme, repo, now = new Date()) {
   out.push(`<rect x="${P}" y="${ty - 22}" width="20" height="26" rx="3" fill="none" stroke="${t.muted}" stroke-width="2.5"/><rect x="${P + 4}" y="${ty - 7}" width="12" height="2.5" fill="${t.muted}"/>`);
   const room = rx - P - 36;
   const slash = `${repo.owner} / `;
-  const nsz = Math.min(30, fitSize('semibold', slash + repo.title, room));
+  const nsz = Math.min(32, fitSize('semibold', slash + repo.title, room));
   const sw = measure('text', slash, nsz);
   out.push(T('text', slash, P + 34, ty, nsz, t.muted));
   out.push(T('semibold', repo.title, P + 34 + sw, ty, nsz, t.accent));
 
-  out.push(path(block('text', repo.blurb, P, ty + 48, 23, W - 2 * P, { lead: 33, maxLines: 2 }).d, t.muted));
+  out.push(path(block('text', repo.blurb, P, ty + 50, 25, W - 2 * P, { lead: 34, maxLines: 2 }).d, t.muted));
 
   // chips: its site, then topics
   let chx = P;
   const chy = H - 126;
   const chips = [...(repo.host ? [{ text: `${repo.host} ↗`, host: true }] : []), ...(repo.topics || []).slice(0, 3).map((x) => ({ text: x }))];
   for (const c of chips) {
-    const p = pill(t, c.text, chx, chy, { color: t.accent, bg: t.accentBg, border: 'none', size: 17, h: 32 });
+    const p = pill(t, c.text, chx, chy + 2, { color: t.accent, bg: t.accentBg, border: 'none', size: 18, h: 34 });
     if (chx + p.w > W - P) break;
     out.push(p.svg);
     chx += p.w + 8;
@@ -266,107 +292,149 @@ export function card(theme, repo, now = new Date()) {
   let fx = P;
   if (repo.lang) {
     out.push(`<circle cx="${fx + 8}" cy="${fy - 7}" r="8" fill="${langColor(repo.lang)}"/>`);
-    const l = line('text', repo.lang, fx + 26, fy, 19);
+    const l = line('text', repo.lang, fx + 26, fy, 21);
     out.push(path(l.d, t.muted));
     fx += 26 + l.width + 26;
   }
   if (repo.stars > 0) {
     out.push(star(fx + 9, fy - 7, 10, t.muted));
-    const l = line('text', String(repo.stars), fx + 28, fy, 19);
+    const l = line('text', String(repo.stars), fx + 28, fy, 21);
     out.push(path(l.d, t.muted));
     fx += 28 + l.width + 26;
   }
-  if (repo.forks > 0) out.push(T('text', `${repo.forks} ${repo.forks === 1 ? 'fork' : 'forks'}`, fx, fy, 19, t.muted));
-  out.push(T('text', `Updated ${ago(repo.pushed, now)}`, W - P, fy, 19, t.muted, { anchor: 'end' }));
-  return svg(W, H, { title: repo.title, desc: `${repo.title}: ${repo.blurb}` }, out.join(''));
+  if (repo.forks > 0) out.push(T('text', `${repo.forks} ${repo.forks === 1 ? 'fork' : 'forks'}`, fx, fy, 21, t.muted));
+  out.push(T('text', `Updated ${ago(repo.pushed, now)}`, W - P, fy, 21, t.muted, { anchor: 'end' }));
+  return svg(W + 20, H + 20, { title: repo.title, desc: `${repo.title}: ${repo.blurb}` }, `<g transform="translate(10 10)">${out.join('')}</g>`);
 }
 
 // ─── recent commits as a git graph ───────────────────────────────────────────
 
 /** @param commits {{ repo:string, msg:string, at:string, sha:string }[]} newest first */
-export function activity(theme, commits, now = new Date()) {
+export const activityHeight = (n) => 104 + n * 88 + 16;
+export function activity(theme, commits, now = new Date(), height = 0) {
   const t = THEMES[theme];
-  const W = 1280, row = 66, top = 112;
-  const H = top + commits.length * row + 28;
+  const W = 800, row = 88, top = 104;
+  const H = Math.max(height, activityHeight(commits.length));
   const colors = [t.accent, t.green, t.purple, t.orange, t.pink];
   const lanes = [];
   for (const c of commits) if (!lanes.includes(c.repo)) lanes.push(c.repo);
-  const lx = (repo) => 72 + Math.min(lanes.indexOf(repo), 4) * 34;
-  const col = (repo) => colors[Math.min(lanes.indexOf(repo), 4)];
-  const textX = 72 + Math.min(lanes.length, 5) * 34 + 28;
+  const lane = (repo) => Math.min(lanes.indexOf(repo), 4);
+  const lx = (repo) => 46 + lane(repo) * 26;
+  const col = (repo) => colors[lane(repo)];
+  const textX = 46 + Math.min(lanes.length, 5) * 26 + 18;
 
   const out = [frame(t, W, H)];
-  out.push(T('semibold', 'Recent commits', 48, 62, 28, t.fg));
-  out.push(T('text', 'across my public repositories', 48 + measure('semibold', 'Recent commits', 28) + 16, 62, 22, t.muted));
-  out.push(`<rect x="1" y="86" width="${W - 2}" height="1.5" fill="${t.border}"/>`);
+  out.push(T('semibold', 'Recent commits', 40, 56, 28, t.fg));
+  out.push(T('text', 'across my public repositories', 40 + measure('semibold', 'Recent commits', 28) + 14, 56, 18, t.muted));
+  out.push(`<rect x="1" y="80" width="${W - 2}" height="1.5" fill="${t.border}"/>`);
 
+  const cy = (k) => top + k * row + 24;
   commits.forEach((c, k) => {
-    const y = top + k * row + row / 2 - 6, x = lx(c.repo);
     if (k < commits.length - 1) {
-      const n = commits[k + 1], ny = y + row, nx = lx(n.repo);
+      const n = commits[k + 1], x = lx(c.repo), nx = lx(n.repo), y = cy(k), ny = cy(k + 1);
       out.push(`<path d="M${x},${y} C${x},${y + row * 0.55} ${nx},${ny - row * 0.55} ${nx},${ny}" fill="none" stroke="${col(n.repo)}" stroke-width="3.5" stroke-linecap="round"/>`);
     }
   });
   commits.forEach((c, k) => {
-    const y = top + k * row + row / 2 - 6, x = lx(c.repo);
+    const y = cy(k), x = lx(c.repo);
     out.push(`<circle cx="${x}" cy="${y}" r="9" fill="${col(c.repo)}" stroke="${t.canvas}" stroke-width="4"/>`);
-    const p = pill(t, c.repo, textX, y - 16, { color: col(c.repo), border: col(c.repo), size: 16, font: 'mono', h: 32 });
-    out.push(p.svg);
-    const right = W - 48;
-    const meta = `${c.sha.slice(0, 7)} · ${ago(c.at, now)}`;
-    out.push(T('mono', meta, right, y + 6, 16, t.muted, { anchor: 'end' }));
-    const room = right - measure('mono', meta, 16) - 24 - (textX + p.w + 18);
-    out.push(path(block('text', c.msg, textX + p.w + 18, y + 8, 22, room, { maxLines: 1 }).d, t.fg));
+    out.push(pill(t, c.repo, textX, y - 16, { color: col(c.repo), border: col(c.repo), size: 15, font: 'mono', h: 30 }).svg);
+    out.push(T('mono', `${c.sha.slice(0, 7)} · ${ago(c.at, now)}`, W - 32, y + 5, 15, t.muted, { anchor: 'end' }));
+    out.push(path(block('text', c.msg, textX, y + 41, 23, W - 32 - textX, { lead: 29, maxLines: 2 }).d, t.fg));
   });
   return svg(W, H, { title: 'Recent commits', desc: commits.map((c) => `${c.repo}: ${c.msg} (${ago(c.at, now)})`).join('. ') }, out.join(''));
 }
 
 // ─── the year in numbers, and a language bar ─────────────────────────────────
 
-/** @param s {{ contributions:number, commits:number, prs:number, repos:number, languages:[string, number][] }} */
-export function stats(theme, s) {
+/**
+ * @param s {{ contributions:number, commits:number, prs:number, repos:number, streak:number, busiest:{count:number,label:string}|null, languages:[string, number][] }}
+ * @param height the height to match (the activity panel beside it)
+ */
+export function stats(theme, s, height = 0) {
   const t = THEMES[theme];
-  const W = 1280, H = 330;
-  const out = [frame(t, W, H)];
+  const W = 800, H = Math.max(height, 600);
+  const sep = H - 168;
   const tiles = [
     [s.contributions, 'contributions in the last year'],
     [s.commits, 'commits'],
     [s.prs, 'pull requests'],
     [s.repos, 'public repositories'],
+    ...(s.streak != null ? [[s.streak, s.streak === 1 ? 'day, longest streak' : 'days, longest streak']] : []),
+    ...(s.busiest ? [[s.busiest.count, `contributions on ${s.busiest.label}, my busiest day`]] : []),
   ];
-  const colW = (W - 96) / tiles.length;
+  const rows = Math.ceil(tiles.length / 2), gap = rows > 1 ? (sep - 60 - 130) / (rows - 1) : 0;
+  const out = [];
   tiles.forEach(([v, label], i) => {
-    const x = 48 + i * colW;
-    out.push(T('bold', Number(v).toLocaleString('en-US'), x, 100, 60, t.fg));
-    out.push(path(block('text', label, x, 140, 21, colW - 24, { maxLines: 2, lead: 28 }).d, t.muted));
-    if (i) out.push(`<rect x="${x - 24}" y="46" width="1.5" height="120" fill="${t.border}"/>`);
+    const x = 44 + (i % 2) * 372, y = 96 + Math.floor(i / 2) * Math.min(gap, 150);
+    out.push(T('bold', Number(v).toLocaleString('en-US'), x, y, 66, t.fg));
+    out.push(path(block('text', label, x, y + 36, 21, 330, { lead: 26, maxLines: 2 }).d, t.muted));
   });
-  out.push(`<rect x="1" y="190" width="${W - 2}" height="1.5" fill="${t.border}"/>`);
+  out.push(`<rect x="${W / 2 - 1}" y="40" width="1.5" height="${sep - 60}" fill="${t.border}"/>`);
+  out.push(`<rect x="1" y="${sep}" width="${W - 2}" height="1.5" fill="${t.border}"/>`);
 
-  // GitHub's language bar
+  // GitHub's language bar, and its legend (wrapping onto a second line)
   const total = s.languages.reduce((a, [, b]) => a + b, 0) || 1;
   const top = s.languages.slice(0, 6);
   const rest = total - top.reduce((a, [, b]) => a + b, 0);
   const segs = rest > total * 0.005 ? [...top, ['Other', rest]] : top;
-  const bx = 48, bw = W - 96, by = 222;
-  out.push(`<clipPath id="lb"><rect x="${bx}" y="${by}" width="${bw}" height="12" rx="6"/></clipPath><g clip-path="url(#lb)">`);
+  const bx = 44, bw = W - 88, by = sep + 36;
+  out.push(`<clipPath id="lb"><rect x="${bx}" y="${by}" width="${bw}" height="14" rx="7"/></clipPath><g clip-path="url(#lb)">`);
   let x = bx;
   for (const [name, bytes] of segs) {
     const w = (bytes / total) * bw;
-    out.push(`<rect x="${r1(x)}" y="${by}" width="${r1(w + 1)}" height="12" fill="${name === 'Other' ? t.muted : langColor(name)}"/>`);
+    out.push(`<rect x="${r1(x)}" y="${by}" width="${r1(w + 1)}" height="14" fill="${name === 'Other' ? t.muted : langColor(name)}"/>`);
     x += w;
   }
   out.push('</g>');
-  let lx = bx;
+  let lx = bx, ly = by + 54;
   for (const [name, bytes] of segs) {
     const pct = (bytes / total) * 100;
     const label = `${name} ${pct < 0.1 ? '<0.1' : pct.toFixed(1)}%`;
-    const lw = measure('text', label, 19);
-    if (lx + lw + 40 > W - 48) break;
-    out.push(`<circle cx="${lx + 8}" cy="${by + 52}" r="8" fill="${name === 'Other' ? t.muted : langColor(name)}"/>`);
-    out.push(T('text', label, lx + 26, by + 59, 19, t.muted));
-    lx += 26 + lw + 30;
+    const lw = 26 + measure('text', label, 20) + 24;
+    if (lx + lw > W - 44) (lx = bx), (ly += 36);
+    out.push(`<circle cx="${lx + 8}" cy="${ly - 6}" r="8" fill="${name === 'Other' ? t.muted : langColor(name)}"/>`);
+    out.push(T('text', label, lx + 26, ly, 20, t.muted));
+    lx += lw;
   }
-  const desc = `${s.contributions} contributions, ${s.commits} commits, ${s.prs} pull requests, ${s.repos} public repositories. Languages: ${segs.map(([n, b]) => `${n} ${((b / total) * 100).toFixed(1)}%`).join(', ')}.`;
-  return svg(W, H, { title: 'The year in numbers', desc }, out.join(''));
+  const desc = `${s.contributions} contributions, ${s.commits} commits, ${s.prs} pull requests, ${s.repos} public repositories${s.streak != null ? `, longest streak ${s.streak} days` : ''}. Languages: ${segs.map(([n, b]) => `${n} ${((b / total) * 100).toFixed(1)}%`).join(', ')}.`;
+  return svg(W, H, { title: 'The year in numbers', desc }, frame(t, W, H) + out.join(''));
+}
+
+/** Longest run of days with a contribution, and the busiest single day, from the contribution calendar. */
+export function calendarFacts(weeks) {
+  const days = weeks.flatMap((w) => w.days);
+  let run = 0, best = 0, busiest = null;
+  for (const d of days) {
+    run = d.count > 0 ? run + 1 : 0;
+    best = Math.max(best, run);
+    if (d.count > 0 && (!busiest || d.count > busiest.count)) busiest = d;
+  }
+  return { streak: best, busiest: busiest ? { count: busiest.count, label: new Date(busiest.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }) } : null };
+}
+
+// ─── link buttons with icons ─────────────────────────────────────────────────
+
+// 24 x 24 icons: [paths drawn as outlines, paths drawn filled]
+const ICONS = {
+  globe: ['<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>', ''],
+  pencil: ['<path d="M4 20l1-5L16 4l4 4L9 19z"/><path d="M14 6l4 4"/>', ''],
+  doc: ['<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>', ''],
+  mail: ['<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 8l8 5.5L20 8"/>', ''],
+  code: ['<path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/>', ''],
+  external: ['<path d="M8 16L17 7M9 7h8v8"/>', ''],
+  linkedin: ['', '<path fill-rule="evenodd" d="M5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-13A2.5 2.5 0 0 1 5.5 3zM7 10v7h2.2v-7H7zm1.1-3.4a1.3 1.3 0 1 0 0 2.6 1.3 1.3 0 0 0 0-2.6zM11 10v7h2.2v-3.8c0-1 .6-1.6 1.4-1.6.8 0 1.2.5 1.2 1.5V17H18v-4.2c0-2-1-3-2.6-3-.9 0-1.7.4-2.2 1.1V10H11z"/>'],
+};
+export const ICON_FOR = { Portfolio: 'globe', Site: 'globe', Blog: 'pencil', LinkedIn: 'linkedin', Resume: 'doc', Email: 'mail', Code: 'code', Live: 'external' };
+
+/** A button with an icon, in GitHub's button style. 44px tall; its width follows its label. */
+export function linkButton(theme, label, icon = 'globe') {
+  const t = THEMES[theme];
+  const size = 19, tw = measure('semibold', label, size), W = Math.round(20 + 24 + 10 + tw + 22), H = 44;
+  const [stroke, fill] = ICONS[icon] || ICONS.globe;
+  const body =
+    `<rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="10" fill="${t.subtle}" stroke="${t.border}" stroke-width="2"/>` +
+    `<g transform="translate(18 10)" fill="none" stroke="${t.accent}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${stroke}<g fill="${t.accent}" stroke="none">${fill}</g></g>` +
+    T('semibold', label, 54, H / 2 + size * 0.35, size, t.fg);
+  return svg(W, H, { title: label, desc: label }, body);
 }

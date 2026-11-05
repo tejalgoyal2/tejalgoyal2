@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { XMLParser, XMLValidator } from 'fast-xml-parser';
-import { hero, card, activity, stats, cover, ago, mix, langColor } from '../scripts/render.mjs';
+import { heroProfile, heroSkyline, card, activity, stats, calendarFacts, cover, ago, mix, langColor, linkButton } from '../scripts/render.mjs';
 
 const repo = { name: 'x', owner: 'u', title: 'A <b>"risky"</b> & title', blurb: 'Short blurb for the card, with an apostrophe’s worth of type.', lang: 'Rust', stars: 3, forks: 1, pushed: '2026-11-01T00:00:00Z', host: 'x.example.com', topics: ['a', 'b'], live: true, isNew: true };
 const weeks = Array.from({ length: 53 }, (_, i) => ({ days: Array.from({ length: 7 }, (_, j) => ({ date: new Date(Date.UTC(2025, 10, 2 + i * 7 + j)).toISOString().slice(0, 10), count: (i * j) % 9 })) }));
@@ -13,12 +13,16 @@ const commits = [
 ];
 const now = new Date('2026-11-05T12:00:00Z');
 const pieces = (theme) => ({
-  hero: hero(theme, { name: 'Tejal Goyal', handle: 'u', tagline: 'A tagline that wraps onto a second line or even a third if it must.', chips: ['One', 'Two', 'Three'], weeks, total: 676, last: commits[0] }, now),
-  heroBare: hero(theme, { name: 'Tejal Goyal', handle: 'u', tagline: 'No data.', chips: [], weeks: null, last: null }, now),
+  heroProfile: heroProfile(theme, { name: 'Tejal Goyal', handle: 'u', tagline: 'A tagline that wraps onto a second line or even a third if it must.', chips: ['One', 'Two', 'Three'], last: commits[0] }, now),
+  heroProfileBare: heroProfile(theme, { name: 'Tejal Goyal', handle: 'u', tagline: 'No data.', chips: [], last: null }, now),
+  heroSkyline: heroSkyline(theme, { weeks, total: 676 }),
+  linkButton: linkButton(theme, 'LinkedIn', 'linkedin'),
+  linkButtonUnknownIcon: linkButton(theme, 'Whatever', 'nope'),
   card: card(theme, repo, now),
   cardNoImageNoTopics: card(theme, { ...repo, topics: [], host: '', live: false, isNew: false, stars: 0, forks: 0 }, now),
   activity: activity(theme, commits, now),
-  stats: stats(theme, { contributions: 676, commits: 630, prs: 14, repos: 27, languages: [['TypeScript', 500], ['Rust', 200], ['Python', 100]] }),
+  stats: stats(theme, { contributions: 676, commits: 630, prs: 14, repos: 27, streak: 9, busiest: { count: 31, label: 'Oct 20' }, languages: [['TypeScript', 500], ['Rust', 200], ['Python', 100], ['Go', 50], ['C', 40], ['Swift', 30], ['Lua', 20], ['Other', 10]] }, 640),
+  statsBare: stats(theme, { contributions: 0, commits: 0, prs: 0, repos: 0, languages: [] }),
 });
 
 for (const theme of ['light', 'dark']) {
@@ -52,8 +56,8 @@ test('animation only ever dips away from the finished picture, so a paused one i
   for (const svg of Object.values(pieces('light'))) assert.doesNotMatch(svg, /from\{[^}]*(opacity:0|scale\(0\))/);
 });
 
-test('the hero draws one bar group per day with something in it', () => {
-  const bars = (pieces('light').hero.match(/class="w"/g) || []).length;
+test('the skyline draws one bar group per day with something in it', () => {
+  const bars = (pieces('light').heroSkyline.match(/class="w"/g) || []).length;
   const busy = weeks.flatMap((w) => w.days).filter((d) => d.count > 0).length;
   assert.equal(bars, busy);
 });
@@ -74,4 +78,12 @@ test('ago reads like a person', () => {
   assert.equal(ago('2026-11-02T00:00:00Z', now), '3d ago');
   assert.equal(ago('2026-10-15T00:00:00Z', now), '3w ago');
   assert.equal(ago('2026-03-01T00:00:00Z', now), 'Mar 2026');
+});
+
+test('the streak and the busiest day come from the calendar', () => {
+  const wk = (counts) => ({ days: counts.map((c, i) => ({ date: `2026-03-0${i + 1}`, count: c })) });
+  const f = calendarFacts([wk([0, 2, 3, 0, 1, 1, 1]), wk([4, 0, 0, 0, 0, 0, 0])]);
+  assert.equal(f.streak, 4); // 1, 1, 1 at the end of one week runs on into the 4 that starts the next
+  assert.deepEqual(f.busiest, { count: 4, label: 'Mar 1' });
+  assert.deepEqual(calendarFacts([wk([0, 0])]), { streak: 0, busiest: null });
 });
