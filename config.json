@@ -1,0 +1,84 @@
+{
+  "user": "tejalgoyal2",
+  "name": "Tejal Goyal",
+  "handle": "tejalgoyal2",
+  "site": "https://tgoyal.me",
+  "feed": "https://tejalgoyal2.github.io/feed.xml",
+  "tagline": "Software engineer. I build AI agents, data pipelines, and things that are fun to use.",
+  "chips": [
+    "Co-op @ BCI",
+    "M.Eng. @ UVic",
+    "AI agents · Data · Web"
+  ],
+  "about": "I’m a software engineer co-op at BCI, where I build the apps finance and operations teams work in all day and teach AI agents to talk to real systems. I’m finishing an M.Eng. in Applied Data Science at the University of Victoria (December 2026). Off the clock: F1 every race weekend, speedcubing, and a serious banana bread.",
+  "links": {
+    "Site": "https://tgoyal.me",
+    "Blog": "https://tejalgoyal2.github.io",
+    "LinkedIn": "https://www.linkedin.com/in/tejalgoyal",
+    "Resume": "https://tgoyal.me/resume.pdf",
+    "Email": "mailto:itejalgoyal@gmail.com"
+  },
+  "freshDays": 45,
+  "freshMax": 4,
+  "lead": [
+    "portfolio",
+    "Dime",
+    "type",
+    "bide",
+    "iam-threat-mapper",
+    "claubi"
+  ],
+  "hide": [
+    "tejalgoyal2.github.io",
+    "temp-rep-portfolio",
+    "fall25-csc-bioinf",
+    "CSC502-Massive-Datasets",
+    "occlusion_object_detection",
+    "lockin"
+  ],
+  "repos": {
+    "portfolio": {
+      "title": "tgoyal.me",
+      "image": "https://raw.githubusercontent.com/tejalgoyal2/portfolio/main/docs/readme/front-page.webp",
+      "live": "https://tgoyal.me"
+    },
+    "type": {
+      "live": "https://type.tgoyal.me",
+      "preview": "cover",
+      "blurb": "A blank page for typing, just for the feel of it. No timer and no score: letters land with weight, the page has mass, and six styles answer your rhythm."
+    },
+    "iam-threat-mapper": {
+      "site": "IAM Threat Mapper",
+      "live": "https://iam.tgoyal.me",
+      "blurb": "Five real breaches, taken apart one login at a time and mapped to the attacker’s playbook, MITRE ATT&CK."
+    },
+    "claubi": {
+      "blurb": "A coding agent in Rust that lives on your own machine, treats AI-written code as untrusted, and asks before it acts."
+    },
+    "Dime": {
+      "blurb": "An expense tracker you text like a friend. It reads plain English (and Hinglish), files it, and has opinions."
+    },
+    "sudoku-app": {
+      "site": "Sudoku"
+    },
+    "WalletRIP": {
+      "blurb": "The original expense tracker: privacy-first, with synthetic identities and zero PII. It evolved into Dime."
+    },
+    "SmartHire": {
+      "blurb": "AI resume screening. Matches applicants to job descriptions using NLP similarity scoring in under 15 seconds."
+    },
+    "threatscope": {
+      "site": "ThreatScope",
+      "blurb": "An AI threat-intelligence chatbot that indexes MITRE ATT&CK, NVD CVEs and CISA KEV for plain-English questions."
+    },
+    "OnTop": {
+      "blurb": "A macOS menu bar utility that pins windows above everything. Built after three failed API attempts."
+    },
+    "Nib": {
+      "blurb": "A menu bar scratchpad for macOS."
+    },
+    "chibi-design-system": {
+      "blurb": "The design language behind my apps."
+    }
+  }
+}

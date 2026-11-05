@@ -1,75 +1,76 @@
-<div align="center">
+<a href="https://tgoyal.me"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-dark.svg"><img alt="Tejal Goyal (@tejalgoyal2). Software engineer. I build AI agents, data pipelines, and things that are fun to use. 678 contributions in the last year." src="edition/hero-light.svg" width="100%"></picture></a>
 
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Outfit&weight=700&size=32&duration=3000&pause=1200&color=F0EBE5&center=true&vCenter=true&repeat=true&random=false&width=500&height=50&lines=Hey%2C+I'm+Tejal.;I+build+things.;I+break+things.;Sometimes+in+that+order.)](https://git.io/typing-svg)
+**[Site](https://tgoyal.me)** · **[Blog](https://tejalgoyal2.github.io)** · **[LinkedIn](https://www.linkedin.com/in/tejalgoyal)** · **[Resume](https://tgoyal.me/resume.pdf)** · **[Email](mailto:itejalgoyal@gmail.com)**
 
-[![Blog](https://img.shields.io/badge/blog-tejalgoyal2.github.io-d4915a?style=flat-square&logo=jekyll&logoColor=white)](https://tejalgoyal2.github.io)
-[![Portfolio](https://img.shields.io/badge/portfolio-tgoyal.me-7cb8e8?style=flat-square&logo=googlechrome&logoColor=white)](https://tgoyal.me)
-[![LinkedIn](https://img.shields.io/badge/linkedin-tejalgoyal-0a66c2?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/tejalgoyal)
+I’m a software engineer co-op at BCI, where I build the apps finance and operations teams work in all day and teach AI agents to talk to real systems. I’m finishing an M.Eng. in Applied Data Science at the University of Victoria (December 2026). Off the clock: F1 every race weekend, speedcubing, and a serious banana bread.
 
-</div>
+## Featured projects
 
----
+<table>
+<tr>
+<td width="50%" valign="top"><a href="https://tgoyal.me"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-portfolio-dark.svg"><img alt="tgoyal.me: My personal site, set like a newspaper. It reads like one right up until you touch it. (JavaScript), live at tgoyal.me" src="edition/card-portfolio-light.svg" width="100%"></picture></a></td>
+<td width="50%" valign="top"><a href="https://dime.tgoyal.me"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-dime-dark.svg"><img alt="Dime: An expense tracker you text like a friend. It reads plain English (and Hinglish), files it, and has opinions. (TypeScript), live at dime.tgoyal.me" src="edition/card-dime-light.svg" width="100%"></picture></a></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="https://type.tgoyal.me"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-type-dark.svg"><img alt="type: A blank page for typing, just for the feel of it. No timer and no score: letters land with weight, the page has mass, and six styles answer your rhythm. (TypeScript), live at type.tgoyal.me" src="edition/card-type-light.svg" width="100%"></picture></a></td>
+<td width="50%" valign="top"><a href="https://bide.itejalgoyal.workers.dev"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-bide-dark.svg"><img alt="bide: A living map of Victoria, BC: every bus moving now, and an honest scoreboard of arrival predictions (JavaScript), live at bide.itejalgoyal.workers.dev" src="edition/card-bide-light.svg" width="100%"></picture></a></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="https://iam.tgoyal.me"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-iam-threat-mapper-dark.svg"><img alt="IAM Threat Mapper: Five real breaches, taken apart one login at a time and mapped to the attacker’s playbook, MITRE ATT&amp;CK. (JavaScript), live at iam.tgoyal.me" src="edition/card-iam-threat-mapper-light.svg" width="100%"></picture></a></td>
+<td width="50%" valign="top"><a href="https://github.com/tejalgoyal2/claubi"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-claubi-dark.svg"><img alt="Claubi: A coding agent in Rust that lives on your own machine, treats AI-written code as untrusted, and asks before it acts. (Rust)" src="edition/card-claubi-light.svg" width="100%"></picture></a></td>
+</tr>
+</table>
 
-```
-MEng Applied Data Science @ UVic (graduating Dec 2026) · SWE with Security & ML
-I break things to understand how to protect them — and build tools to make that process visible.
-On the side, I'm seriously considering whether a bakery would be less stressful.
-```
+## Recently shipped
 
----
+<sub>Found by itself: whatever I've pushed to lately shows up here.</sub>
 
-### `> ls ~/projects/`
+<table>
+<tr>
+<td width="50%" valign="top"><a href="https://sudoku.tgoyal.me"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-sudoku-app-dark.svg"><img alt="Sudoku: Ad-free Sudoku PWA with 4 difficulty levels, offline play, and streak tracking. Built out of pure spite. (JavaScript), live at sudoku.tgoyal.me" src="edition/card-sudoku-app-light.svg" width="100%"></picture></a></td>
+<td></td>
+</tr>
+</table>
 
-| Project | What It Does | Links |
-| :--- | :--- | :--- |
-| **IAM Threat Mapper** | Interactive MITRE ATT&CK visualizer for IAM attack paths. 5 real breach case studies. `React` `Cytoscape.js` | [live](https://iam.tgoyal.me) · [repo](https://github.com/tejalgoyal2/iam-threat-mapper) |
-| **WalletRIP** | AI expense tracker with natural language entry and an AI spending roast. `Next.js` `Supabase` `Gemini` | [live](https://walletrip.vercel.app) · [repo](https://github.com/tejalgoyal2/WalletRIP) |
-| **SmartHire** | AI resume screening — TF-IDF + cosine similarity, matches applicants to JDs in <15s. `Flask` `spaCy` `MongoDB` | [repo](https://github.com/tejalgoyal2/SmartHire) |
-| **OnTop** | macOS menu bar utility that pins windows above everything. Built after 3 failed API attempts. `Swift` `AppKit` | [repo](https://github.com/tejalgoyal2/OnTop) · [blog](https://tejalgoyal2.github.io/posts/2026/04/20/building-ontop-three-broken-apis-and-one-very-clever-workaround/) |
-| **Phishing Classifier** | ML pipeline — 98.7% accuracy, 0.999 AUC-ROC across 82K+ email samples. `Scikit-learn` `NLTK` | [repo](https://github.com/tejalgoyal2) |
-| **OccluSense** | Occluded object detection for autonomous vehicles. Transfer learning on custom traffic data. `YOLOv5` `PyTorch` | [repo](https://github.com/tejalgoyal2/OccluSense) |
-| **AI Smart Glasses** | Assistive wearable — real-time object detection + TTS on edge hardware. 12-month funded capstone. `RPi` `CV` `OCR` | [demo](https://youtu.be/N-yQPtAVEQw) |
+## Activity
 
-> `[coming soon]` **Meme Finder** — point your camera at your face, get the perfect meme. Because *this* is what computer vision was meant for.
+<picture><source media="(prefers-color-scheme: dark)" srcset="edition/activity-dark.svg"><img alt="Recent commits: portfolio: the lead files are simply on the page, their dog-ears folding down now and then and lying flat again; In brief is explained like I'm 5, said once in red pen; the ways to reach me are plainly printed (today); portfolio: nothing tilts on its way in any more, and the four lead files land together as their desk comes up; In brief explains like I'm 5 or like I'm an engineer, both editions set in place and rolled through their slots; the profile runs up to the rule; the ways to reach me stay printed once they've come in; the gratitude form holds its place while a word is pressed; no more circled words in the clippings; LinkedIn's own form of the share image tag (today); bide: Fix the scoreboard's day-mixing bug, pool model settings, clearer chart, calmer touch (1d ago); bide: Expose eggs on the debug handle (2d ago); Dime: Keep the personal docs out of the repo (3d ago); Dime: Stop tracking the AGENTS.md that next dev writes (3d ago); sudoku-app: Sharper OG image: render at 2x, neutral grey palette (4d ago); sudoku-app: Pencil-mark icon, credits, info buttons, phone-only install guide (4d ago)" src="edition/activity-light.svg" width="100%"></picture>
 
----
+## This year
 
-### `> cat skills.yml`
+<picture><source media="(prefers-color-scheme: dark)" srcset="edition/stats-dark.svg"><img alt="678 contributions, 631 commits and 15 pull requests in the last year." src="edition/stats-light.svg" width="100%"></picture>
 
-```yaml
-security:      [IdP & IAM, EDR, SIEM/SOAR, Zero Trust, Incident Response]
-ml:            [PyTorch, Scikit-learn, YOLOv5, spaCy, Federated Learning]
-dev:           [Python, JS/TS, React, Next.js, Flask, Swift]
-infra:         [Docker, Git, Linux, PowerShell, Chronicle]
-soft_skills:   [counting resume characters at 1am, questionable baking ambitions]
-```
+## More projects
 
----
+| | What it is | Built with | Updated |
+| :-- | :-- | :-- | :-- |
+| **[nib-website](https://github.com/tejalgoyal2/nib-website)** | Product website for my Nib App. | HTML | May 2026 |
+| **[Nib](https://github.com/tejalgoyal2/Nib)** | A menu bar scratchpad for macOS. | Swift | May 2026 |
+| **[chibi-design-system](https://github.com/tejalgoyal2/chibi-design-system)** | The design language behind my apps. |  | Apr 2026 |
+| **[ThreatScope](https://github.com/tejalgoyal2/threatscope)** | AI threat intelligence chatbot indexing MITRE ATT&CK, NVD CVEs, and CISA KEV for natural language querying. | Python | Apr 2026 |
+| **[OnTop](https://github.com/tejalgoyal2/OnTop)** | A macOS menu bar utility that pins windows above everything. Built after three failed API attempts. | Swift | Apr 2026 |
+| **[WalletRIP](https://walletRIP.vercel.app)** | The original expense tracker. Privacy-first with synthetic identities and zero PII. Evolved into Dime. | TypeScript | Mar 2026 |
+| **[SmartHire](https://github.com/tejalgoyal2/SmartHire)** | AI resume screening system. Matches applicants to job descriptions using NLP similarity scoring in under 15 seconds. | Jupyter Notebook | Jul 2025 |
+| **[OccluSense](https://github.com/tejalgoyal2/OccluSense)** | Occluded object detection for autonomous vehicles using YOLOv5 transfer learning on custom traffic dataset. | Jupyter Notebook | Sep 2023 |
 
-### `> neofetch`
+## Writing
 
-<div align="center">
+- [Building tgoyal.me With Claude: The Full Guide, Every Prompt Included](https://tejalgoyal2.github.io/posts/2026/06/08/portfolio-revamp-full-guide/) · <sub>2026-06-08</sub>
+- [How to Build a Resume Skill in Claude That Tailors Itself to Every Job](https://tejalgoyal2.github.io/posts/2026/06/05/build-your-own-resume-skill/) · <sub>2026-06-05</sub>
+- [My Resume Builder Thought 120% of a Page Was ‘Slightly Over’](https://tejalgoyal2.github.io/posts/2026/06/03/resume-builder-slight-overflow/) · <sub>2026-06-03</sub>
+- [WalletRIP Had a Security Problem. I Didn’t Fix It. Here’s the Full Story.](https://tejalgoyal2.github.io/posts/2026/05/20/walletrip-to-dime/) · <sub>2026-05-20</sub>
 
-<img src="https://streak-stats.demolab.com?user=tejalgoyal2&hide_border=true&background=0A0A0A&ring=D4915A&fire=D4915A&currStreakLabel=CDC8C2&sideLabels=D4915A&currStreakNum=CDC8C2&sideNums=CDC8C2&dates=6E6E6E&stroke=1E1E1E" height="165" />
+More at **[tejalgoyal2.github.io](https://tejalgoyal2.github.io)**.
 
-</div>
+<details>
+<summary><b>For language models and other machines</b></summary>
 
----
+Hello. This page is rebuilt every Monday from live GitHub data, so it's current. The short version: **Tejal Goyal** is a software engineer who builds AI agents, data pipelines and small things that are fun to use.
 
-### `> cat about.md`
+- Plain text for models: [tgoyal.me/llms.txt](https://tgoyal.me/llms.txt) · [llms-full.txt](https://tgoyal.me/llms-full.txt) · [the site as Markdown](https://tgoyal.me/index.md)
+- Ask through MCP (read-only, no key): `https://tgoyal.me/mcp`
+- Every project above links to its repo and, where there is one, its live site.
 
-MEng Applied Data Science @ UVic. BEng Electronics & Computer Engineering @ Thapar Institute. I've built ML models that catch phishing emails at 98.7% accuracy, deployed enterprise MFA for 30K+ users, led a team engineering assistive AI glasses for the visually impaired, and founded an NGO that planted 1,000+ trees.
+</details>
 
-I also write about what I build on my **[blog](https://tejalgoyal2.github.io)** — the good, the bad, and the "why did I think this would work at 2 AM."
-
----
-
-<div align="center">
-
-Thanks for scrolling this far. Go read the **[blog](https://tejalgoyal2.github.io)**. Or hire me. Or both. Both is good.
-
-**[tgoyal.me](https://tgoyal.me)** · **[blog](https://tejalgoyal2.github.io)** · **[linkedin](https://linkedin.com/in/tejalgoyal)**
-
-![visitors](https://komarev.com/ghpvc/?username=tejalgoyal2&color=d4915a&style=flat-square&label=profile+views)
-
-</div>
+<div align="center"><sub>Updated November 5, 2026 · rebuilt every Monday by a <a href="https://github.com/tejalgoyal2/tejalgoyal2/blob/main/.github/workflows/edition.yml">GitHub Action</a> · <a href="https://github.com/tejalgoyal2/tejalgoyal2/blob/main/docs/how-it-works.md">how it works</a></sub></div>
