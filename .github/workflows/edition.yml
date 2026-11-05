@@ -64,7 +64,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "Nothing changed, no edition to file."
           else
-            issue=$(grep -o 'Edition No. [0-9]*' README.md | head -1)
-            git commit -m "${issue:-Edition}"
+            git commit -m "Update profile ($(date -u +%Y-%m-%d))"
             git push "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" HEAD:main
           fi
