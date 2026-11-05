@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { select, describe } from '../scripts/select.mjs';
-import { worthShowing } from '../scripts/collect.mjs';
+import { worthShowing, monotonic } from '../scripts/collect.mjs';
 import { wrap, measure } from '../scripts/type.mjs';
 
 const now = new Date('2026-11-05T12:00:00Z');
@@ -67,4 +67,15 @@ test('wrapping never overflows, and cuts with an ellipsis', () => {
   assert.equal(lines.length, 2);
   assert.ok(lines.every((l) => measure('text', l, 25) <= 400));
   assert.ok(lines[1].endsWith('…'));
+});
+
+test('a future-dated commit can’t jump the queue: dates never run ahead of the commit after them, or past now', () => {
+  const now = Date.parse('2026-11-05T12:00:00Z');
+  // newest first: a normal commit, then two scheduled for January, then an old one
+  const out = monotonic(['2026-11-05T10:00:00Z', '2027-01-10T00:00:00Z', '2027-01-09T00:00:00Z', '2026-11-02T00:00:00Z'], now);
+  assert.deepEqual(out, ['2026-11-05T10:00:00.000Z', '2026-11-05T10:00:00.000Z', '2026-11-05T10:00:00.000Z', '2026-11-02T00:00:00.000Z']);
+  // and a lone future date is held at now
+  assert.deepEqual(monotonic(['2027-01-10T00:00:00Z'], now), ['2026-11-05T12:00:00.000Z']);
+  // dates that are already in order are left alone
+  assert.deepEqual(monotonic(['2026-11-04T00:00:00Z', '2026-11-03T00:00:00Z'], now), ['2026-11-04T00:00:00.000Z', '2026-11-03T00:00:00.000Z']);
 });

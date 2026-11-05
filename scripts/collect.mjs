@@ -20,6 +20,20 @@ async function gh(url, token) {
   return res.json();
 }
 
+/**
+ * Dates for a repo's commits, newest first, that never run ahead of the commit after them and never
+ * land in the future. Commit dates are whatever the author set (some of mine are scheduled ahead),
+ * so sorting by them alone would put a future-dated commit above everything that really came last.
+ */
+export function monotonic(dates, now = Date.now()) {
+  let ceiling = now;
+  return dates.map((d) => {
+    const t = Math.min(new Date(d).getTime(), ceiling);
+    ceiling = t;
+    return new Date(t).toISOString();
+  });
+}
+
 /** A commit message worth showing: first line, not a merge, not a robot's chore. */
 export const worthShowing = (msg) => {
   const first = String(msg).split('\n')[0].trim();
@@ -83,10 +97,12 @@ export async function collect(config, { token, publicOnly = true, log = () => {}
       const recent = repos.filter((r) => !r.fork && r.name !== user).slice(0, 8);
       const lists = await Promise.all(
         recent.map(async (r) => {
-          const commits = await gh(`/repos/${user}/${r.name}/commits?per_page=6`, token);
+          const commits = await gh(`/repos/${user}/${r.name}/commits?per_page=8`, token);
+          const when = monotonic(commits.map((c) => c.commit.author.date));
           return commits
-            .filter((c) => c.commit.author?.email?.includes(user) || c.author?.login === user)
-            .map((c) => ({ repo: r.name, msg: worthShowing(c.commit.message), at: c.commit.author.date, url: c.html_url, sha: c.sha }))
+            .map((c, i) => ({ c, at: when[i] }))
+            .filter(({ c }) => c.commit.author?.email?.includes(user) || c.author?.login === user)
+            .map(({ c, at }) => ({ repo: r.name, msg: worthShowing(c.commit.message), at, url: c.html_url, sha: c.sha }))
             .filter((c) => c.msg)
             .slice(0, 3); // a few from each repo, so one busy project can't fill the list
         }),

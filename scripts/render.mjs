@@ -56,7 +56,7 @@ const svg = (w, h, { title, desc, css = '' }, body) =>
 /** "3d ago", "2w ago", "Oct 2025" */
 export function ago(iso, now = new Date()) {
   const days = Math.floor((now - new Date(iso)) / 864e5);
-  if (days < 1) return 'today';
+  if (!(days >= 1)) return 'today'; // also covers a date in the future
   if (days < 14) return `${days}d ago`;
   if (days < 60) return `${Math.round(days / 7)}w ago`;
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
