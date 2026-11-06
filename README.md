@@ -1,6 +1,6 @@
 <p>
-<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-profile-dark.svg"><img alt="Tejal Goyal (@tejalgoyal2). Software engineer. I build AI agents, data pipelines, and things that are fun to use. Latest push: portfolio: the link preview shows the current front page: the nameplate over BUILDING SOFTWARE THAT FEELS OBVIOUS and a plane towing the tgoyal.me banner, in a fifth of the file size." src="edition/hero-profile-light.svg" width="402"></picture>
-<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-skyline-dark.svg"><img alt="690 contributions in the last year, as a skyline of towers: taller means a busier day." src="edition/hero-skyline-light.svg" width="402"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-profile-dark.svg"><img alt="Tejal Goyal (@tejalgoyal2). Software engineer. I build AI agents, data pipelines, and things that are fun to use. Latest push: portfolio: the files for machines are shorter and carry no email address: llms.txt is six highlights, the work and the links, and llms-full.txt has the rest; and tgoyal.me/github is a short link that shows a proper preview picture and then sends people to my GitHub." src="edition/hero-profile-light.svg" width="402"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-skyline-dark.svg"><img alt="696 contributions in the last year, as a skyline of towers: taller means a busier day." src="edition/hero-skyline-light.svg" width="402"></picture>
 </p>
 
 <p>
