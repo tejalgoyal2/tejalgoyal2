@@ -5,18 +5,16 @@
   "site": "https://tgoyal.me",
   "feed": "https://tejalgoyal2.github.io/feed.xml",
   "tagline": "Software engineer. I build AI agents, data pipelines, and things that are fun to use.",
-  "chips": [
-    "M.Eng. @ UVic",
-    "AI agents · Data · Web",
-    "F1 · Speedcubing"
-  ],
   "about": "I build AI agents that talk to real systems, data pipelines that hold up, and small things that are fun to use. I’m finishing an M.Eng. in Applied Data Science at the University of Victoria (December 2026). Off the clock: F1 every race weekend, speedcubing, and a serious banana bread.",
   "links": {
     "Portfolio": "https://tgoyal.me",
     "Blog": "https://tejalgoyal2.github.io",
     "LinkedIn": "https://www.linkedin.com/in/tejalgoyal",
-    "Resume": "https://tgoyal.me/resume.pdf",
-    "Email": "mailto:itejalgoyal@gmail.com"
+    "Resume": "https://tgoyal.me/resume.pdf"
+  },
+  "show": {
+    "activity": false,
+    "stats": false
   },
   "freshDays": 45,
   "freshMax": 4,

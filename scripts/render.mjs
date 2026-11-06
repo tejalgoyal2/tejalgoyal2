@@ -88,8 +88,8 @@ const star = (cx, cy, r, fill) => {
 // ─── the hero: name over a skyline of the year ───────────────────────────────
 
 /** The contribution calendar as an isometric bar chart, in GitHub's greens. */
-function skyline(t, weeks, cx, top) {
-  const s = 10, a = s * 0.866, b = s * 0.5, gap = 0.86, H = 84;
+export function skyline(t, weeks, cx, top, s = 10, H = 84) {
+  const a = s * 0.866, b = s * 0.5, gap = 0.86;
   const max = Math.max(1, ...weeks.flatMap((w) => w.days.map((d) => d.count)));
   const cells = weeks.flatMap((w, i) => w.days.map((d, j) => ({ i, j, d })));
   cells.sort((p, q) => p.i + p.j - (q.i + q.j) || p.i - q.i); // back to front
@@ -119,7 +119,7 @@ const panel = (w, h, title, desc, css, body) => svg(w + 20, h + 20, { title, des
 
 /**
  * The left panel: who I am, and the latest thing I pushed.
- * @param data {{ name:string, handle:string, tagline:string, chips:string[], avatar?:{mime:string,b64:string},
+ * @param data {{ name:string, handle:string, tagline:string, avatar?:{mime:string,b64:string},
  *               last?:{repo:string,msg:string,at:string,sha:string}|null }}
  */
 export function heroProfile(theme, data, now = new Date()) {
@@ -139,17 +139,8 @@ export function heroProfile(theme, data, now = new Date()) {
   out.push(T('bold', data.name, ax + ar + 22, ay - 2, ns, t.fg));
   out.push(T('mono', `@${data.handle}`, ax + ar + 24, ay + 32, 20, t.muted));
 
-  const tg = block('text', data.tagline, L, 196, 30, W - 2 * L, { lead: 40, maxLines: 3 });
+  const tg = block('text', data.tagline, L, 204, 34, W - 2 * L, { lead: 46, maxLines: 3 });
   out.push(path(tg.d, t.fg));
-
-  let cx = L;
-  const cy = 196 + tg.height - 8;
-  for (const c of data.chips) {
-    const p = pill(t, c, cx, cy, { color: t.muted, border: t.border, bg: t.subtle, size: 16, h: 32 });
-    if (cx + p.w > W - L) break;
-    out.push(p.svg);
-    cx += p.w + 8;
-  }
 
   // the latest push, set the way GitHub sets the latest commit at the top of a repo page
   if (data.last) {
@@ -233,12 +224,13 @@ export function cover(theme, title, lang, x, y, w, h) {
 // ─── a project card: GitHub's repo card, with a picture on top ───────────────
 
 /**
- * @param repo {{ name:string, title:string, blurb:string, lang?:string, stars:number, forks?:number, pushed:string, host?:string,
- *               topics?:string[], live?:boolean, isNew?:boolean, owner:string, image?:{mime:string,b64:string} }}
+ * A repo card, as quiet as GitHub's own: a picture, "owner / name", what it is, and a footer.
+ * @param repo {{ name:string, title:string, blurb:string, lang?:string, stars:number, forks?:number, pushed:string,
+ *               owner:string, image?:{mime:string,b64:string} }}
  */
 export function card(theme, repo, now = new Date()) {
   const t = THEMES[theme];
-  const W = 800, H = 584, IH = 300, P = 36;
+  const W = 800, H = 520, IH = 300, P = 36;
   const out = [];
   out.push(`<clipPath id="r"><rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="18"/></clipPath>`);
   out.push(`<rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="18" fill="${t.canvas}"/>`);
@@ -250,45 +242,19 @@ export function card(theme, repo, now = new Date()) {
   out.push(`<rect y="${IH}" width="${W}" height="2" fill="${t.border}"/></g>`);
   out.push(`<rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="18" fill="none" stroke="${t.border}" stroke-width="2"/>`);
 
-  // title row: owner / name, and its state labels on the right
+  // "owner / name": the owner muted, the name in link blue, as on GitHub
   const ty = IH + 62;
-  const labels = [];
-  if (repo.isNew) labels.push((x) => pill(t, 'New', x, ty - 28, { color: t.purple, bg: t.purpleBg, border: t.purple, size: 17, h: 32 }));
-  if (repo.live) labels.push((x) => pill(t, 'Live', x, ty - 28, { color: t.green, bg: t.greenBg, border: t.green, size: 17, h: 32, dot: true }));
-  if (!labels.length) labels.push((x) => pill(t, 'Public', x, ty - 28, { color: t.muted, border: t.border, size: 17, h: 32 }));
-  let rx = W - P;
-  const placed = [];
-  for (const mk of [...labels].reverse()) {
-    const probe = mk(0);
-    rx -= probe.w;
-    placed.push(mk(rx).svg);
-    rx -= 10;
-  }
-  out.push(...placed);
-  // a repo glyph, then "owner /" muted and the name in link blue, as on GitHub
   out.push(`<rect x="${P}" y="${ty - 22}" width="20" height="26" rx="3" fill="none" stroke="${t.muted}" stroke-width="2.5"/><rect x="${P + 4}" y="${ty - 7}" width="12" height="2.5" fill="${t.muted}"/>`);
-  const room = rx - P - 36;
   const slash = `${repo.owner} / `;
-  const nsz = Math.min(32, fitSize('semibold', slash + repo.title, room));
+  const nsz = Math.min(32, fitSize('semibold', slash + repo.title, W - 2 * P - 36));
   const sw = measure('text', slash, nsz);
   out.push(T('text', slash, P + 34, ty, nsz, t.muted));
   out.push(T('semibold', repo.title, P + 34 + sw, ty, nsz, t.accent));
 
   out.push(path(block('text', repo.blurb, P, ty + 50, 25, W - 2 * P, { lead: 34, maxLines: 2 }).d, t.muted));
 
-  // chips: its site, then topics
-  let chx = P;
-  const chy = H - 126;
-  const chips = [...(repo.host ? [{ text: `${repo.host} ↗`, host: true }] : []), ...(repo.topics || []).slice(0, 3).map((x) => ({ text: x }))];
-  for (const c of chips) {
-    const p = pill(t, c.text, chx, chy + 2, { color: t.accent, bg: t.accentBg, border: 'none', size: 18, h: 34 });
-    if (chx + p.w > W - P) break;
-    out.push(p.svg);
-    chx += p.w + 8;
-  }
-
-  // foot: language, stars, forks, updated
-  const fy = H - 38;
+  // foot: language, stars, updated
+  const fy = H - 34;
   let fx = P;
   if (repo.lang) {
     out.push(`<circle cx="${fx + 8}" cy="${fy - 7}" r="8" fill="${langColor(repo.lang)}"/>`);
@@ -298,11 +264,8 @@ export function card(theme, repo, now = new Date()) {
   }
   if (repo.stars > 0) {
     out.push(star(fx + 9, fy - 7, 10, t.muted));
-    const l = line('text', String(repo.stars), fx + 28, fy, 21);
-    out.push(path(l.d, t.muted));
-    fx += 28 + l.width + 26;
+    out.push(T('text', String(repo.stars), fx + 28, fy, 21, t.muted));
   }
-  if (repo.forks > 0) out.push(T('text', `${repo.forks} ${repo.forks === 1 ? 'fork' : 'forks'}`, fx, fy, 21, t.muted));
   out.push(T('text', `Updated ${ago(repo.pushed, now)}`, W - P, fy, 21, t.muted, { anchor: 'end' }));
   return svg(W + 20, H + 20, { title: repo.title, desc: `${repo.title}: ${repo.blurb}` }, `<g transform="translate(10 10)">${out.join('')}</g>`);
 }
@@ -437,4 +400,33 @@ export function linkButton(theme, label, icon = 'globe') {
     `<g transform="translate(18 10)" fill="none" stroke="${t.accent}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${stroke}<g fill="${t.accent}" stroke="none">${fill}</g></g>` +
     T('semibold', label, 54, H / 2 + size * 0.35, size, t.fg);
   return svg(W, H, { title: label, desc: label }, body);
+}
+
+// ─── the picture for a shared link ───────────────────────────────────────────
+
+/**
+ * 1200 x 630, for tgoyal.me/github's link preview: who I am, beside the skyline. One picture, drawn
+ * on GitHub's dark canvas, because a preview shows up on every kind of background.
+ * @param data {{ name:string, handle:string, tagline:string, avatar?:{mime:string,b64:string}, weeks:{days:{date:string,count:number}[]}[] }}
+ */
+export function social(data) {
+  const t = THEMES.dark;
+  const W = 1200, H = 630, L = 72;
+  const out = [`<rect width="${W}" height="${H}" fill="${t.canvas}"/>`];
+  out.push(skyline(t, data.weeks, 880, 96, 11.6, 96));
+  // a soft fade so the skyline never runs into the words
+  out.push(`<defs><linearGradient id="f" x1="0" x2="1"><stop offset="0" stop-color="${t.canvas}"/><stop offset="1" stop-color="${t.canvas}" stop-opacity="0"/></linearGradient></defs><rect x="0" y="0" width="640" height="${H}" fill="url(#f)"/>`);
+  const ax = L + 62, ay = 148, ar = 62;
+  out.push(`<clipPath id="av"><circle cx="${ax}" cy="${ay}" r="${ar}"/></clipPath>`);
+  out.push(
+    data.avatar
+      ? `<image clip-path="url(#av)" href="data:${data.avatar.mime};base64,${data.avatar.b64}" x="${ax - ar}" y="${ay - ar}" width="${ar * 2}" height="${ar * 2}"/>`
+      : `<circle cx="${ax}" cy="${ay}" r="${ar}" fill="${t.subtle}"/>`,
+  );
+  out.push(`<circle cx="${ax}" cy="${ay}" r="${ar}" fill="none" stroke="${t.border}" stroke-width="3"/>`);
+  out.push(T('bold', data.name, ax + ar + 28, ay - 4, 62, t.fg));
+  out.push(T('mono', `@${data.handle}`, ax + ar + 30, ay + 36, 26, t.muted));
+  out.push(path(block('text', data.tagline, L, 292, 40, 520, { lead: 54, maxLines: 4 }).d, t.fg));
+  out.push(T('mono', `github.com/${data.handle}`, L, H - 64, 30, t.accent));
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">${out.join('')}</svg>\n`;
 }
