@@ -1,6 +1,6 @@
 <p>
-<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-profile-dark.svg"><img alt="Tejal Goyal (@tejalgoyal2). Software engineer. I build AI agents, data pipelines, and things that are fun to use. Latest push: portfolio: the files for machines are shorter and carry no email address: llms.txt is six highlights, the work and the links, and llms-full.txt has the rest; and tgoyal.me/github is a short link that shows a proper preview picture and then sends people to my GitHub." src="edition/hero-profile-light.svg" width="402"></picture>
-<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-skyline-dark.svg"><img alt="696 contributions in the last year, as a skyline of towers: taller means a busier day." src="edition/hero-skyline-light.svg" width="402"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-profile-dark.svg"><img alt="Tejal Goyal (@tejalgoyal2). Software engineer. I build AI agents, data pipelines, and things that are fun to use. Latest push: lockin: Fix test config name for the tech-flavoured title test." src="edition/hero-profile-light.svg" width="402"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-skyline-dark.svg"><img alt="718 contributions in the last year, as a skyline of towers: taller means a busier day." src="edition/hero-skyline-light.svg" width="402"></picture>
 </p>
 
 <p>
@@ -16,13 +16,13 @@ I build AI agents that talk to real systems, data pipelines that hold up, and sm
 
 <p>
 <a href="https://github.com/tejalgoyal2/portfolio"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-portfolio-dark.svg"><img alt="tgoyal.me: My personal site, set like a newspaper. It reads like one right up until you touch it. (JavaScript), live at tgoyal.me. Opens the repository." src="edition/card-portfolio-light.svg" width="402"></picture></a>
-<a href="https://github.com/tejalgoyal2/Dime"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-dime-dark.svg"><img alt="Dime: An expense tracker you text like a friend. It reads plain English (and Hinglish), files it, and has opinions. (TypeScript), live at dime.tgoyal.me. Opens the repository." src="edition/card-dime-light.svg" width="402"></picture></a>
+<a href="https://github.com/tejalgoyal2/Dime"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-dime-dark.svg"><img alt="dime: An expense tracker you text like a friend. It reads plain English (and Hinglish), files it, and has opinions. (TypeScript), live at dime.tgoyal.me. Opens the repository." src="edition/card-dime-light.svg" width="402"></picture></a>
 <a href="https://github.com/tejalgoyal2/type"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-type-dark.svg"><img alt="type: A blank page for typing, just for the feel of it. No timer and no score: letters land with weight, the page has mass, and six styles answer your rhythm. (TypeScript), live at type.tgoyal.me. Opens the repository." src="edition/card-type-light.svg" width="402"></picture></a>
-<a href="https://github.com/tejalgoyal2/bide"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-bide-dark.svg"><img alt="bide: A living map of Victoria, BC: every bus moving now, and an honest scoreboard of arrival predictions (JavaScript), live at bide.itejalgoyal.workers.dev. Opens the repository." src="edition/card-bide-light.svg" width="402"></picture></a>
+<a href="https://github.com/tejalgoyal2/bide"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-bide-dark.svg"><img alt="bide: A living map of Victoria, BC: every bus moving now, with light that follows the real sun, weather and tide, and an honest scoreboard of arrival predictions. (JavaScript), live at bide.itejalgoyal.workers.dev. Opens the repository." src="edition/card-bide-light.svg" width="402"></picture></a>
 <a href="https://github.com/tejalgoyal2/iam-threat-mapper"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-iam-threat-mapper-dark.svg"><img alt="IAM Threat Mapper: Five real breaches, taken apart one login at a time and mapped to the attacker’s playbook, MITRE ATT&amp;CK. (JavaScript), live at iam.tgoyal.me. Opens the repository." src="edition/card-iam-threat-mapper-light.svg" width="402"></picture></a>
-<a href="https://github.com/tejalgoyal2/claubi"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-claubi-dark.svg"><img alt="Claubi: A coding agent in Rust that lives on your own machine, treats AI-written code as untrusted, and asks before it acts. (Rust). Opens the repository." src="edition/card-claubi-light.svg" width="402"></picture></a>
-<a href="https://github.com/tejalgoyal2/lockin"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-lockin-dark.svg"><img alt="lockin: Finding a job.... (Python). Opens the repository." src="edition/card-lockin-light.svg" width="402"></picture></a>
-<a href="https://github.com/tejalgoyal2/sudoku-app"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-sudoku-app-dark.svg"><img alt="Sudoku: Ad-free Sudoku PWA with 4 difficulty levels, offline play, and streak tracking. Built out of pure spite. (JavaScript), live at sudoku.tgoyal.me. Opens the repository." src="edition/card-sudoku-app-light.svg" width="402"></picture></a>
+<a href="https://github.com/tejalgoyal2/claubi"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-claubi-dark.svg"><img alt="claubi: A coding agent in Rust that lives on your own machine, treats AI-written code as untrusted, and asks before it acts. (Rust). Opens the repository." src="edition/card-claubi-light.svg" width="402"></picture></a>
+<a href="https://github.com/tejalgoyal2/lockin"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-lockin-dark.svg"><img alt="lockin: A job-hunting intern that never asks for coffee: it scans public job lists twice a day and files the best new entry-level roles. (Python). Opens the repository." src="edition/card-lockin-light.svg" width="402"></picture></a>
+<a href="https://github.com/tejalgoyal2/sudoku-app"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-sudoku-app-dark.svg"><img alt="sudoku: A calm, ad-free Sudoku for phone and laptop: daily puzzle, hints that teach, challenges, 11 themes, offline. Built out of pure spite. (JavaScript), live at sudoku.tgoyal.me. Opens the repository." src="edition/card-sudoku-app-light.svg" width="402"></picture></a>
 </p>
 
 ## More
@@ -30,13 +30,13 @@ I build AI agents that talk to real systems, data pipelines that hold up, and sm
 | Project | What it is | Built with |
 | :-- | :-- | :-- |
 | **[nib-website](https://github.com/tejalgoyal2/nib-website)** | Product website for my Nib App. | HTML |
-| **[Nib](https://github.com/tejalgoyal2/Nib)** | A menu bar scratchpad for macOS. | Swift |
+| **[nib](https://github.com/tejalgoyal2/Nib)** | A menu bar scratchpad for macOS: one note, always there, with live Markdown, pinning and no cloud. | Swift |
 | **[chibi-design-system](https://github.com/tejalgoyal2/chibi-design-system)** | The design language behind my apps. |  |
-| **[ThreatScope](https://github.com/tejalgoyal2/threatscope)** | AI threat intelligence chatbot indexing MITRE ATT&CK, NVD CVEs, and CISA KEV for natural language querying. | Python |
+| **[threatscope](https://github.com/tejalgoyal2/threatscope)** | AI threat intelligence chatbot indexing MITRE ATT&CK, NVD CVEs, and CISA KEV for natural language querying. | Python |
 | **[OnTop](https://github.com/tejalgoyal2/OnTop)** | A macOS menu bar utility that pins windows above everything. Built after three failed API attempts. | Swift |
-| **[WalletRIP](https://github.com/tejalgoyal2/WalletRIP)** | The original expense tracker. Privacy-first with synthetic identities and zero PII. Evolved into Dime. | TypeScript |
-| **[SmartHire](https://github.com/tejalgoyal2/SmartHire)** | AI resume screening system. Matches applicants to job descriptions using NLP similarity scoring in under 15 seconds. | Jupyter Notebook |
-| **[OccluSense](https://github.com/tejalgoyal2/OccluSense)** | Occluded object detection for autonomous vehicles using YOLOv5 transfer learning on custom traffic dataset. | Jupyter Notebook |
+| **[walletrip](https://github.com/tejalgoyal2/WalletRIP)** | The original expense tracker. Privacy-first with synthetic identities and zero PII. Evolved into dime. | TypeScript |
+| **[smarthire](https://github.com/tejalgoyal2/SmartHire)** | AI resume screening system. Matches applicants to job descriptions using NLP similarity scoring in under 15 seconds. | Jupyter Notebook |
+| **[occlusense](https://github.com/tejalgoyal2/OccluSense)** | Occluded object detection for autonomous vehicles using YOLOv5 transfer learning on custom traffic dataset. | Jupyter Notebook |
 
 ## Writing
 
@@ -52,4 +52,4 @@ Tejal Goyal is a software engineer who builds AI agents, data pipelines and smal
 
 </details>
 
-<div align="center"><sub>Updated November 6, 2026 · rebuilt every Monday · <a href="https://github.com/tejalgoyal2/tejalgoyal2/blob/main/docs/how-it-works.md">how it works</a></sub></div>
+<div align="center"><sub>Updated November 9, 2026 · rebuilt every Monday · <a href="https://github.com/tejalgoyal2/tejalgoyal2/blob/main/docs/how-it-works.md">how it works</a></sub></div>
