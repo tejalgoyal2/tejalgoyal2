@@ -1,6 +1,6 @@
 <p>
-<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-profile-dark.svg"><img alt="Tejal Goyal (@tejalgoyal2). Software engineer. I build AI agents, data pipelines, and things that are fun to use. Latest push: lockin: Fix test config name for the tech-flavoured title test." src="edition/hero-profile-light.svg" width="402"></picture>
-<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-skyline-dark.svg"><img alt="718 contributions in the last year, as a skyline of towers: taller means a busier day." src="edition/hero-skyline-light.svg" width="402"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-profile-dark.svg"><img alt="Tejal Goyal (@tejalgoyal2). Software engineer. I build AI agents, data pipelines, and things that are fun to use. Latest push: lockin: Fewer silent misses; talent pool flag (#24)." src="edition/hero-profile-light.svg" width="402"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-skyline-dark.svg"><img alt="746 contributions in the last year, as a skyline of towers: taller means a busier day." src="edition/hero-skyline-light.svg" width="402"></picture>
 </p>
 
 <p>
@@ -22,6 +22,7 @@ I build AI agents that talk to real systems, data pipelines that hold up, and sm
 <a href="https://github.com/tejalgoyal2/iam-threat-mapper"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-iam-threat-mapper-dark.svg"><img alt="IAM Threat Mapper: Five real breaches, taken apart one login at a time and mapped to the attacker’s playbook, MITRE ATT&amp;CK. (JavaScript), live at iam.tgoyal.me. Opens the repository." src="edition/card-iam-threat-mapper-light.svg" width="402"></picture></a>
 <a href="https://github.com/tejalgoyal2/claubi"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-claubi-dark.svg"><img alt="claubi: A coding agent in Rust that lives on your own machine, treats AI-written code as untrusted, and asks before it acts. (Rust). Opens the repository." src="edition/card-claubi-light.svg" width="402"></picture></a>
 <a href="https://github.com/tejalgoyal2/lockin"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-lockin-dark.svg"><img alt="lockin: A job-hunting intern that never asks for coffee: it scans public job lists twice a day and files the best new entry-level roles. (Python). Opens the repository." src="edition/card-lockin-light.svg" width="402"></picture></a>
+<a href="https://github.com/tejalgoyal2/wiki"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-wiki-dark.svg"><img alt="wiki: A growing, linked wiki of software, data and ML. One deep lesson a day. (TypeScript), live at wiki.tgoyal.me. Opens the repository." src="edition/card-wiki-light.svg" width="402"></picture></a>
 <a href="https://github.com/tejalgoyal2/sudoku-app"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-sudoku-app-dark.svg"><img alt="sudoku: A calm, ad-free Sudoku for phone and laptop: daily puzzle, hints that teach, challenges, 11 themes, offline. Built out of pure spite. (JavaScript), live at sudoku.tgoyal.me. Opens the repository." src="edition/card-sudoku-app-light.svg" width="402"></picture></a>
 </p>
 
@@ -52,4 +53,4 @@ Tejal Goyal is a software engineer who builds AI agents, data pipelines and smal
 
 </details>
 
-<div align="center"><sub>Updated November 9, 2026 · rebuilt every Monday · <a href="https://github.com/tejalgoyal2/tejalgoyal2/blob/main/docs/how-it-works.md">how it works</a></sub></div>
+<div align="center"><sub>Updated November 12, 2026 · rebuilt every Monday · <a href="https://github.com/tejalgoyal2/tejalgoyal2/blob/main/docs/how-it-works.md">how it works</a></sub></div>
