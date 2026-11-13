@@ -206,7 +206,8 @@ export function thumb(theme, repo) {
   else out.push(cover(theme, repo.title, repo.lang, 0, 0, W, H));
   out.push(`</g><rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="${R}" fill="none" stroke="${t.border}" stroke-width="2"/>`);
   const css = `.c{transform-box:fill-box;transform-origin:50% 100%;animation:rise 1s cubic-bezier(.2,.7,.2,1) var(--d) backwards}@keyframes rise{from{transform:scaleY(0)}}`;
-  return svg(W, H, { title: repo.title, desc: `${repo.title}: ${repo.blurb}`, css }, out.join(''));
+  // 24px of clear space on the right is the gap between the picture and the words beside it
+  return svg(W + 24, H, { title: repo.title, desc: `${repo.title}: ${repo.blurb}`, css }, out.join(''));
 }
 
 // ─── recent commits as a git graph ───────────────────────────────────────────

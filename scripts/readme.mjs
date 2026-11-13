@@ -17,12 +17,13 @@ export const thumbFile = (name) => `thumb-${name.toLowerCase().replace(/[^a-z0-9
 const ICON = { Portfolio: '🌐', Site: '🌐', Blog: '✍️', LinkedIn: '💼', Resume: '📄', Email: '✉️', GitHub: '🐙' };
 const links = (L) => Object.entries(L).map(([k, url]) => `${ICON[k] || '🔗'} [${md(k)}](${url})`).join(' · ');
 
-// One project: a small picture, then the name (a link to the repository, which is where a click on a
-// repo is expected to go) and what it is. The words are the card; the picture is a thumbnail.
+// One project: a small picture on the left, then the name (a link to the repository, which is where
+// a click on a repo is expected to go) and what it is. The words are the card; the picture is a
+// thumbnail. The picture floats, so on a phone the words wrap beneath it instead of squeezing beside it.
 const meta = (d, now) => [d.lang, d.stars > 0 ? `★ ${d.stars}` : '', `updated ${ago(d.pushed, now)}`].filter(Boolean).join(' · ');
-const row = (d, now) =>
-  `<tr>\n<td width="176" valign="top"><a href="${esc(d.repoUrl)}">${picture(thumbFile(d.name), `${d.title}, preview`, 'width="160"')}</a></td>\n` +
-  `<td valign="top"><b><a href="${esc(d.repoUrl)}">${esc(d.title)}</a></b><br>${esc(clip(d.blurb, 175))}<br><sub>${esc(meta(d, now))}</sub></td>\n</tr>`;
+const project = (d, now) =>
+  `<p>\n<a href="${esc(d.repoUrl)}">${picture(thumbFile(d.name), `${d.title}, preview`, 'width="172" align="left"')}</a>\n` +
+  `<b><a href="${esc(d.repoUrl)}">${esc(d.title)}</a></b><br>\n${esc(clip(d.blurb, 175))}<br>\n<sub>${esc(meta(d, now))}</sub>\n<br clear="left">\n</p>`;
 
 export function readme({ config, now, leads, fresh, brief, wire, calendar, posts, hasStats, hasActivity }) {
   const day = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
@@ -34,7 +35,7 @@ export function readme({ config, now, leads, fresh, brief, wire, calendar, posts
   out.push(`${links(config.links)}\n`);
 
   // the curated projects first, then whatever I've pushed to lately that isn't one of them: new repos join by themselves
-  out.push(`## Projects\n\n<table>\n${[...leads, ...fresh].map((d) => row(d, now)).join('\n')}\n</table>\n`);
+  out.push(`## Projects\n\n${[...leads, ...fresh].map((d) => project(d, now)).join('\n')}\n`);
 
   const showActivity = hasActivity && wire.length >= 2, showStats = hasStats && calendar;
   if (showActivity || showStats) {

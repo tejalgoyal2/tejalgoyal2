@@ -6,44 +6,69 @@ I build AI agents that talk to real systems, data pipelines that hold up, and sm
 
 ## Projects
 
-<table>
-<tr>
-<td width="176" valign="top"><a href="https://github.com/tejalgoyal2/portfolio"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-portfolio-dark.svg"><img alt="tgoyal.me, preview" src="edition/thumb-portfolio-light.svg" width="160"></picture></a></td>
-<td valign="top"><b><a href="https://github.com/tejalgoyal2/portfolio">tgoyal.me</a></b><br>My personal site, set like a newspaper. It reads like one right up until you touch it.<br><sub>JavaScript · ★ 1 · updated 1d ago</sub></td>
-</tr>
-<tr>
-<td width="176" valign="top"><a href="https://github.com/tejalgoyal2/Dime"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-dime-dark.svg"><img alt="dime, preview" src="edition/thumb-dime-light.svg" width="160"></picture></a></td>
-<td valign="top"><b><a href="https://github.com/tejalgoyal2/Dime">dime</a></b><br>An expense tracker you text like a friend. It reads plain English (and Hinglish), files it, and has opinions.<br><sub>TypeScript · ★ 1 · updated 5d ago</sub></td>
-</tr>
-<tr>
-<td width="176" valign="top"><a href="https://github.com/tejalgoyal2/type"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-type-dark.svg"><img alt="type, preview" src="edition/thumb-type-light.svg" width="160"></picture></a></td>
-<td valign="top"><b><a href="https://github.com/tejalgoyal2/type">type</a></b><br>A blank page for typing, just for the feel of it. No timer and no score: letters land with weight, the page has mass, and six styles answer your rhythm.<br><sub>TypeScript · updated 3w ago</sub></td>
-</tr>
-<tr>
-<td width="176" valign="top"><a href="https://github.com/tejalgoyal2/bide"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-bide-dark.svg"><img alt="bide, preview" src="edition/thumb-bide-light.svg" width="160"></picture></a></td>
-<td valign="top"><b><a href="https://github.com/tejalgoyal2/bide">bide</a></b><br>A living map of Victoria, BC: every bus moving now, with light that follows the real sun, weather and tide, and an honest scoreboard of arrival predictions.<br><sub>JavaScript · updated today</sub></td>
-</tr>
-<tr>
-<td width="176" valign="top"><a href="https://github.com/tejalgoyal2/iam-threat-mapper"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-iam-threat-mapper-dark.svg"><img alt="IAM Threat Mapper, preview" src="edition/thumb-iam-threat-mapper-light.svg" width="160"></picture></a></td>
-<td valign="top"><b><a href="https://github.com/tejalgoyal2/iam-threat-mapper">IAM Threat Mapper</a></b><br>Five real breaches, taken apart one login at a time and mapped to the attacker’s playbook, MITRE ATT&amp;CK.<br><sub>JavaScript · ★ 2 · updated Mar 2026</sub></td>
-</tr>
-<tr>
-<td width="176" valign="top"><a href="https://github.com/tejalgoyal2/claubi"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-claubi-dark.svg"><img alt="claubi, preview" src="edition/thumb-claubi-light.svg" width="160"></picture></a></td>
-<td valign="top"><b><a href="https://github.com/tejalgoyal2/claubi">claubi</a></b><br>A coding agent in Rust that lives on your own machine, treats AI-written code as untrusted, and asks before it acts.<br><sub>Rust · ★ 2 · updated Apr 2026</sub></td>
-</tr>
-<tr>
-<td width="176" valign="top"><a href="https://github.com/tejalgoyal2/wiki"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-wiki-dark.svg"><img alt="wiki, preview" src="edition/thumb-wiki-light.svg" width="160"></picture></a></td>
-<td valign="top"><b><a href="https://github.com/tejalgoyal2/wiki">wiki</a></b><br>A growing, linked wiki of software, data and ML. One deep lesson a day.<br><sub>TypeScript · updated today</sub></td>
-</tr>
-<tr>
-<td width="176" valign="top"><a href="https://github.com/tejalgoyal2/sudoku-app"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-sudoku-app-dark.svg"><img alt="sudoku, preview" src="edition/thumb-sudoku-app-light.svg" width="160"></picture></a></td>
-<td valign="top"><b><a href="https://github.com/tejalgoyal2/sudoku-app">sudoku</a></b><br>A calm, ad-free Sudoku for phone and laptop: daily puzzle, hints that teach, challenges, 11 themes, offline. Built out of pure spite.<br><sub>JavaScript · updated today</sub></td>
-</tr>
-<tr>
-<td width="176" valign="top"><a href="https://github.com/tejalgoyal2/lockin"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-lockin-dark.svg"><img alt="lockin, preview" src="edition/thumb-lockin-light.svg" width="160"></picture></a></td>
-<td valign="top"><b><a href="https://github.com/tejalgoyal2/lockin">lockin</a></b><br>A job-hunting intern that never asks for coffee: it scans public job lists twice a day and files the best new entry-level roles.<br><sub>Python · updated today</sub></td>
-</tr>
-</table>
+<p>
+<a href="https://github.com/tejalgoyal2/portfolio"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-portfolio-dark.svg"><img alt="tgoyal.me, preview" src="edition/thumb-portfolio-light.svg" width="172" align="left"></picture></a>
+<b><a href="https://github.com/tejalgoyal2/portfolio">tgoyal.me</a></b><br>
+My personal site, set like a newspaper. It reads like one right up until you touch it.<br>
+<sub>JavaScript · ★ 1 · updated 1d ago</sub>
+<br clear="left">
+</p>
+<p>
+<a href="https://github.com/tejalgoyal2/Dime"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-dime-dark.svg"><img alt="dime, preview" src="edition/thumb-dime-light.svg" width="172" align="left"></picture></a>
+<b><a href="https://github.com/tejalgoyal2/Dime">dime</a></b><br>
+An expense tracker you text like a friend. It reads plain English (and Hinglish), files it, and has opinions.<br>
+<sub>TypeScript · ★ 1 · updated 5d ago</sub>
+<br clear="left">
+</p>
+<p>
+<a href="https://github.com/tejalgoyal2/type"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-type-dark.svg"><img alt="type, preview" src="edition/thumb-type-light.svg" width="172" align="left"></picture></a>
+<b><a href="https://github.com/tejalgoyal2/type">type</a></b><br>
+A blank page for typing, just for the feel of it. No timer and no score: letters land with weight, the page has mass, and six styles answer your rhythm.<br>
+<sub>TypeScript · updated 3w ago</sub>
+<br clear="left">
+</p>
+<p>
+<a href="https://github.com/tejalgoyal2/bide"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-bide-dark.svg"><img alt="bide, preview" src="edition/thumb-bide-light.svg" width="172" align="left"></picture></a>
+<b><a href="https://github.com/tejalgoyal2/bide">bide</a></b><br>
+A living map of Victoria, BC: every bus moving now, with light that follows the real sun, weather and tide, and an honest scoreboard of arrival predictions.<br>
+<sub>JavaScript · updated today</sub>
+<br clear="left">
+</p>
+<p>
+<a href="https://github.com/tejalgoyal2/iam-threat-mapper"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-iam-threat-mapper-dark.svg"><img alt="IAM Threat Mapper, preview" src="edition/thumb-iam-threat-mapper-light.svg" width="172" align="left"></picture></a>
+<b><a href="https://github.com/tejalgoyal2/iam-threat-mapper">IAM Threat Mapper</a></b><br>
+Five real breaches, taken apart one login at a time and mapped to the attacker’s playbook, MITRE ATT&amp;CK.<br>
+<sub>JavaScript · ★ 2 · updated Mar 2026</sub>
+<br clear="left">
+</p>
+<p>
+<a href="https://github.com/tejalgoyal2/claubi"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-claubi-dark.svg"><img alt="claubi, preview" src="edition/thumb-claubi-light.svg" width="172" align="left"></picture></a>
+<b><a href="https://github.com/tejalgoyal2/claubi">claubi</a></b><br>
+A coding agent in Rust that lives on your own machine, treats AI-written code as untrusted, and asks before it acts.<br>
+<sub>Rust · ★ 2 · updated Apr 2026</sub>
+<br clear="left">
+</p>
+<p>
+<a href="https://github.com/tejalgoyal2/wiki"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-wiki-dark.svg"><img alt="wiki, preview" src="edition/thumb-wiki-light.svg" width="172" align="left"></picture></a>
+<b><a href="https://github.com/tejalgoyal2/wiki">wiki</a></b><br>
+A growing, linked wiki of software, data and ML. One deep lesson a day.<br>
+<sub>TypeScript · updated today</sub>
+<br clear="left">
+</p>
+<p>
+<a href="https://github.com/tejalgoyal2/sudoku-app"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-sudoku-app-dark.svg"><img alt="sudoku, preview" src="edition/thumb-sudoku-app-light.svg" width="172" align="left"></picture></a>
+<b><a href="https://github.com/tejalgoyal2/sudoku-app">sudoku</a></b><br>
+A calm, ad-free Sudoku for phone and laptop: daily puzzle, hints that teach, challenges, 11 themes, offline. Built out of pure spite.<br>
+<sub>JavaScript · updated today</sub>
+<br clear="left">
+</p>
+<p>
+<a href="https://github.com/tejalgoyal2/lockin"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-lockin-dark.svg"><img alt="lockin, preview" src="edition/thumb-lockin-light.svg" width="172" align="left"></picture></a>
+<b><a href="https://github.com/tejalgoyal2/lockin">lockin</a></b><br>
+A job-hunting intern that never asks for coffee: it scans public job lists twice a day and files the best new entry-level roles.<br>
+<sub>Python · updated today</sub>
+<br clear="left">
+</p>
 
 ## More
 

@@ -23,8 +23,8 @@ test('who I am is said once: no tagline panel beside the intro', () => {
 });
 
 test('each project is a thumbnail and a linked name with its line, and the name goes to the repository', () => {
-  assert.equal((md.match(/<tr>/g) || []).length, 3);
-  assert.match(md, /<b><a href="https:\/\/github\.com\/u\/a">a<\/a><\/b><br>What a does, in a line\.<br><sub>Rust · updated 4d ago<\/sub>/);
+  assert.equal((md.match(/<br clear="left">/g) || []).length, 3);
+  assert.match(md, /<b><a href="https:\/\/github\.com\/u\/a">a<\/a><\/b><br>\nWhat a does, in a line\.<br>\n<sub>Rust · updated 4d ago<\/sub>/);
   assert.match(md, /★ 2/);
   assert.doesNotMatch(md, /edition\/card-|live at|Opens the repository/);
 });
