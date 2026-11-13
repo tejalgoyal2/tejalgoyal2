@@ -2,11 +2,12 @@
 // are each designed on their own, not one flipped into the other), GitHub's typefaces, and the
 // contribution greens. What's new is made out of the data:
 //   skyline   the last year's contributions as an isometric skyline
+//   card      a repo card with no picture: the name and what it is, set large, in a bordered box
 //   badge     a small coloured link badge, the kind a README has
 //   activity  your latest commits as a git graph, one lane per repo (off unless switched on)
 //   stats     the year in numbers and a language bar (off unless switched on)
 // Every word is an outline (scripts/type.mjs). Nothing moves: it's a page people read, not a show.
-import { line, block, measure } from './type.mjs';
+import { line, block, measure, fitSize } from './type.mjs';
 
 export const THEMES = {
   light: {
@@ -73,6 +74,14 @@ function pill(t, text, x, y, { color, bg = 'none', border = color, dot = false, 
   };
 }
 
+const star = (cx, cy, r, fill) => {
+  const p = Array.from({ length: 10 }, (_, i) => {
+    const a = -Math.PI / 2 + (i * Math.PI) / 5, rad = i % 2 ? r * 0.42 : r;
+    return `${r1(cx + Math.cos(a) * rad)},${r1(cy + Math.sin(a) * rad)}`;
+  });
+  return `<polygon points="${p.join(' ')}" fill="${fill}"/>`;
+};
+
 // ─── the year as a skyline ───────────────────────────────────────────────────
 
 /** The contribution calendar as an isometric bar chart, in GitHub's greens. Still: one flat shape per day. */
@@ -119,6 +128,39 @@ export function heroSkyline(theme, data) {
   out.push(T('mono', 'More', x + 4, H - 12, 15, t.muted));
   out.push(skyline(t, data.weeks, 556, 0, 9.4, 82));
   return svg(W, H, { title: 'Contributions', desc: `${data.total} contributions in the last year, drawn as an isometric skyline: taller, darker towers are busier days.` }, out.join(''));
+}
+
+const CARD_TEXT = { size: 28, lead: 38, width: 728 };
+/** How many lines a project's one-liner takes on its card (at most 3): the cards in a row all use the longest. */
+export const blurbLines = (blurb) => block('text', blurb, 0, 0, CARD_TEXT.size, CARD_TEXT.width, { lead: CARD_TEXT.lead, maxLines: 3 }).lines;
+
+/**
+ * A repo card with no picture: a bordered box where the words are the card. The name in link blue, what it
+ * is in big full-colour type, and a quiet footer.
+ * @param lines how many lines of one-liner to leave room for (see blurbLines)
+ */
+export function card(theme, repo, now = new Date(), lines = 2) {
+  const t = THEMES[theme];
+  const W = 800, P = 36;
+  const ty = 66, by = ty + 56, fy = by + (Math.max(1, lines) - 1) * CARD_TEXT.lead + 62, H = fy + 34;
+  const out = [];
+  out.push(`<rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="18" fill="${t.canvas}" stroke="${t.border}" stroke-width="2"/>`);
+  out.push(`<rect x="${P}" y="${ty - 25}" width="22" height="29" rx="3" fill="none" stroke="${t.muted}" stroke-width="2.5"/><rect x="${P + 4}" y="${ty - 8}" width="14" height="2.5" fill="${t.muted}"/>`);
+  out.push(T('semibold', repo.title, P + 38, ty, Math.min(36, fitSize('semibold', repo.title, W - 2 * P - 38)), t.accent));
+  out.push(path(block('text', repo.blurb, P, by, CARD_TEXT.size, CARD_TEXT.width, { lead: CARD_TEXT.lead, maxLines: 3 }).d, t.fg));
+  let fx = P;
+  if (repo.lang) {
+    out.push(`<circle cx="${fx + 8}" cy="${fy - 7}" r="8" fill="${langColor(repo.lang)}"/>`);
+    const l = line('text', repo.lang, fx + 26, fy, 20);
+    out.push(path(l.d, t.muted));
+    fx += 26 + l.width + 26;
+  }
+  if (repo.stars > 0) {
+    out.push(star(fx + 9, fy - 7, 10, t.muted));
+    out.push(T('text', String(repo.stars), fx + 28, fy, 20, t.muted));
+  }
+  out.push(T('text', `Updated ${ago(repo.pushed, now)}`, W - P, fy, 20, t.muted, { anchor: 'end' }));
+  return svg(W + 20, H + 20, { title: repo.title, desc: `${repo.title}: ${repo.blurb}` }, `<g transform="translate(10 10)">${out.join('')}</g>`);
 }
 
 // ─── recent commits as a git graph ───────────────────────────────────────────

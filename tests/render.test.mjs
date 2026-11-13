@@ -2,9 +2,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { XMLParser, XMLValidator } from 'fast-xml-parser';
-import { heroSkyline, badge, BADGES, activity, stats, calendarFacts, ago, mix, langColor, social } from '../scripts/render.mjs';
+import { heroSkyline, card, blurbLines, badge, BADGES, activity, stats, calendarFacts, ago, mix, langColor, social } from '../scripts/render.mjs';
 
 const weeks = Array.from({ length: 53 }, (_, i) => ({ days: Array.from({ length: 7 }, (_, j) => ({ date: new Date(Date.UTC(2025, 10, 2 + i * 7 + j)).toISOString().slice(0, 10), count: (i * j) % 9 })) }));
+const repo = { name: 'x', owner: 'u', title: 'A <b>"risky"</b> & title', blurb: 'Short blurb for the card, with an apostrophe’s worth of type.', lang: 'Rust', stars: 3, forks: 1, pushed: '2026-11-01T00:00:00Z' };
 const commits = [
   { repo: 'a', msg: 'first thing', at: '2026-11-04T00:00:00Z', sha: 'abcdef1234' },
   { repo: 'b', msg: 'second thing, which is long enough that it has to be cut off somewhere along the way home', at: '2026-11-03T00:00:00Z', sha: '1234567890' },
@@ -14,6 +15,8 @@ const now = new Date('2026-11-05T12:00:00Z');
 
 const pieces = (theme) => ({
   heroSkyline: heroSkyline(theme, { weeks, total: 676 }),
+  card: card(theme, repo, now),
+  cardNoStars: card(theme, { ...repo, stars: 0 }, now),
   badge: badge('LinkedIn', BADGES.LinkedIn),
   badgeUnknown: badge('Whatever', { icon: 'nope' }),
   activity: activity(theme, commits, now),
@@ -46,7 +49,7 @@ test('the skyline draws a tower for every day with something in it, and flat gro
   assert.equal(polygons, weeks.length * 7 + 2 * busy); // a top for every day, plus two sides for each tower
 });
 
-test('language colours are GitHub’s own; unknown languages get a neutral one; unknown languages get a neutral one', () => {
+test('language colours are GitHub’s own; unknown languages get a neutral one', () => {
   assert.equal(langColor('Rust'), '#dea584');
   assert.equal(langColor('Brainfuck'), '#8b949e');
   assert.equal(mix('#000000', '#ffffff', 0.5), '#808080');

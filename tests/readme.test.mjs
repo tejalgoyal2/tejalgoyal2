@@ -26,12 +26,12 @@ test('the page is the skyline, the intro, the links and the projects: no extra s
   assert.doesNotMatch(md, /For language models|## More|## Writing|llms\.txt/);
 });
 
-test('each project is one plain line: its name, linked to the repository, and what it is', () => {
-  assert.match(md, /^- \*\*\[a\]\(https:\/\/github\.com\/u\/a\)\*\*: What a does, in a line\.$/m);
-  assert.equal((md.match(/^- \*\*\[/gm) || []).length, 3);
-  assert.doesNotMatch(md, /edition\/card-/); // no picture cards
+test('each project is a card that opens its repository', () => {
+  assert.equal((md.match(/edition\/card-/g) || []).length, 6); // three projects, light and dark
+  assert.match(md, /<a href="https:\/\/github\.com\/u\/a"><picture>/);
 });
 
 test('text from other sites can’t add markup', () => {
-  assert.match(md, /A &amp; B &lt;tag>/);
+  assert.match(md, /A &amp; B &lt;tag>/); // in a card's description (its alt text), escaped
+  assert.doesNotMatch(md, /alt="[^"]*<tag>/);
 });

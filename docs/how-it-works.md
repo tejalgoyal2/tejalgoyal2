@@ -8,10 +8,10 @@ The profile at [github.com/tejalgoyal2](https://github.com/tejalgoyal2) rebuilds
 
 1. **Collect** (`scripts/collect.mjs`): public repos, their languages, the newest real commits, the contribution calendar, my avatar, and what tgoyal.me's own MCP server says about my projects.
 2. **Choose** (`scripts/select.mjs`):
-   - *Projects* (a name and a one-line description each): the repos named in `config.json → lead`, in that order, then anything else pushed to in the last 45 days that has a description, a site or topics. **A new repo shows up here by itself.**
+   - *Projects* (a bordered card each: the name and a one-line description, no picture): the repos named in `config.json → lead`, in that order, then anything else pushed to in the last 45 days that has a description, a site or topics. **A new repo shows up here by itself.**
    - Forks, archived, private and hidden repos, and GitHub-course repos never show.
 3. **Draw** (`scripts/render.mjs`): a still isometric skyline of the year's contributions, the link badges, and the preview image for `tgoyal.me/github` (`edition/social.png`). A git graph of recent commits and a year-in-numbers panel are drawn too if you switch them on (`show` in `config.json`). Every word is an outline, so nothing depends on the viewer's fonts. Each piece is drawn twice, light and dark.
-4. **Write** (`scripts/readme.mjs`): the README: the skyline, one intro, the link badges and the project list: each project's name (a link to its repo) and one line about it. Nothing else.
+4. **Write** (`scripts/readme.mjs`): the README: the skyline, one intro, the link badges and the project cards: a bordered box with the name (a link to its repo) and one line about it, no picture. Nothing else.
 
 ## What to edit
 
