@@ -1,7 +1,7 @@
-// The picture for each project. In order of preference:
+// The picture on each card. In order of preference:
 //   1. the project's own share image (its og:image), because it was designed on purpose;
 //   2. a screenshot of the live site, taken in headless Chromium;
-//   3. nothing: the thumbnail draws the repo's commits as towers of blocks instead (scripts/render.mjs).
+//   3. nothing: the card draws its own halftone cover instead (scripts/render.mjs).
 // config.repos.<name>.preview can force "og", "shot" or "cover".
 //
 // Pictures are stored in assets/shots/<repo>.jpg and only replaced when they have visibly
@@ -12,7 +12,7 @@ import sharp from 'sharp';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const W = 1200, H = 750; // a thumbnail's picture (8:5), kept large so it can be redrawn smaller
+const W = 1200, H = 450; // the card's picture banner (800 x 300) at 1.5x
 const UA = 'tejalgoyal2-profile-edition (+https://github.com/tejalgoyal2/tejalgoyal2)';
 
 const toJpeg = (input, position) =>
@@ -24,7 +24,7 @@ const toJpeg = (input, position) =>
 
 /** How different two pictures look: mean gray difference of 32x14 thumbnails, 0-255. */
 async function difference(a, b) {
-  const thumb = (x) => sharp(x).resize(32, 20, { fit: 'fill' }).greyscale().raw().toBuffer();
+  const thumb = (x) => sharp(x).resize(32, 14, { fit: 'fill' }).greyscale().raw().toBuffer();
   const [ta, tb] = await Promise.all([thumb(a), thumb(b)]);
   let sum = 0;
   for (let i = 0; i < ta.length; i++) sum += Math.abs(ta[i] - tb[i]);
@@ -43,7 +43,7 @@ async function fromOg(url) {
 }
 
 async function fromShot(browser, url) {
-  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: 'no-preference', colorScheme: 'light' });
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 480 }, reducedMotion: 'no-preference', colorScheme: 'light' });
   try {
     const page = await ctx.newPage();
     await page.goto(url, { waitUntil: 'load', timeout: 25_000 });
@@ -79,8 +79,7 @@ export async function preview({ repo, d, probe, shotsDir, browser, log = () => {
   }
   if (!fresh) return existing ? done(existing, 'kept') : null;
 
-  const shaped = existing && (await sharp(existing).metadata()).height === H; // an older, differently shaped file is replaced
-  if (shaped && (await difference(existing, fresh)) < 3) return done(existing, 'kept'); // same picture
+  if (existing && (await difference(existing, fresh)) < 3) return done(existing, 'kept'); // same picture
   fs.mkdirSync(shotsDir, { recursive: true });
   fs.writeFileSync(file, fresh);
   log(`  + ${repo}: new ${source} picture`);

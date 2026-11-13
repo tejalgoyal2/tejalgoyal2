@@ -8,11 +8,11 @@ import path from 'node:path';
 import { execSync } from 'node:child_process';
 import sharp from 'sharp';
 import { fileURLToPath } from 'node:url';
-import { collect, probe, weeklyCommits } from './collect.mjs';
+import { collect, probe } from './collect.mjs';
 import { select, describe } from './select.mjs';
 import { preview } from './previews.mjs';
-import { heroSkyline, thumb, activity, activityHeight, stats, calendarFacts, social } from './render.mjs';
-import { readme, thumbFile } from './readme.mjs';
+import { heroSkyline, card, badge, BADGES, activity, activityHeight, stats, calendarFacts, social } from './render.mjs';
+import { readme, cardFile, linkFile } from './readme.mjs';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = new Set(process.argv.slice(2));
@@ -44,7 +44,7 @@ if (cached) {
 
 const sel = select({ repos: data.repos, config, now });
 const shown = [...sel.leads, ...sel.fresh];
-log(`featured ${sel.leads.length} · recent ${sel.fresh.length} · more ${sel.brief.length} · left out ${sel.silent.length}`);
+log(`featured ${sel.leads.length} · recent ${sel.fresh.length} · left out ${sel.silent.length + sel.brief.length}`);
 
 // is each card's own site up, and what does it share?
 data.probes ||= {};
@@ -84,23 +84,6 @@ for (const r of shown) {
 }
 await browser?.close();
 
-// what a project with no picture draws instead: its own commits, week by week (kept in the cache, so a redraw needs no network)
-data.rhythm ||= {};
-if (!cached) {
-  await Promise.all(
-    cards.filter((c) => !c.pic).map(async (c) => {
-      const w = await weeklyCommits(config.user, c.d.name, token);
-      if (w) data.rhythm[c.d.name] = w;
-      else log(`  ! ${c.d.name}: no commit history yet, so its thumbnail is a plain grid`);
-    }),
-  );
-  fs.writeFileSync(cacheFile, JSON.stringify(data));
-}
-// a picture is drawn at 160 x 100, so it is stored here at 2.5x and nothing bigger is ever embedded
-for (const c of cards) {
-  if (c.pic) c.pic = { mime: 'image/jpeg', b64: (await sharp(Buffer.from(c.pic.b64, 'base64')).resize(400, 250, { fit: 'cover', position: 'north' }).jpeg({ quality: 72, mozjpeg: true }).toBuffer()).toString('base64') };
-}
-
 // the avatar, re-encoded as a small plain JPEG (saved, so a cached run needs no network)
 const avatarFile = path.join(root, 'assets', 'avatar.jpg');
 if (!cached && data.profile?.avatar) {
@@ -134,7 +117,7 @@ const hasActivity = !!config.show?.activity;
 
 for (const theme of ['light', 'dark']) {
   if (cal) put(`hero-skyline-${theme}.svg`, heroSkyline(theme, { weeks: cal.weeks, total: cal.total }));
-  for (const { d, pic } of cards) put(`${thumbFile(d.name)}-${theme}.svg`, thumb(theme, { ...d, image: pic, rhythm: data.rhythm[d.name] }));
+  for (const { d, pic } of cards) put(`${cardFile(d.name)}-${theme}.svg`, card(theme, { ...d, image: pic }, now));
   const ph = Math.max(activityHeight(commits.length), 620); // the activity and stats panels sit side by side, so they share a height
   if (config.show?.activity && commits.length >= 2) put(`activity-${theme}.svg`, activity(theme, commits, now, ph));
   if (config.show?.stats && cal) {
@@ -142,6 +125,8 @@ for (const theme of ['light', 'dark']) {
     put(`stats-${theme}.svg`, stats(theme, { contributions: cal.total, commits: cal.commits, prs: cal.prs, repos: data.profile?.publicRepos ?? data.repos.filter((r) => !r.private).length, languages: langs, ...facts }, ph));
   }
 }
+// the link badges (one picture each: white on a colour reads on light and dark alike)
+for (const [label] of Object.entries(config.links)) put(`${linkFile(label)}.svg`, badge(label, BADGES[label]));
 // the picture for tgoyal.me/github's link preview (it's read from here, so it stays current)
 if (cal) {
   const png = await sharp(Buffer.from(social({ name: config.name, handle: config.handle, tagline: config.tagline, avatar, weeks: cal.weeks }))).png({ compressionLevel: 9 }).toBuffer();
@@ -152,7 +137,6 @@ if (cal) {
 // tidy: files for things that are no longer shown
 for (const f of fs.readdirSync(out)) if (!written.has(f)) fs.rmSync(path.join(out, f));
 
-const describeAll = (list) => list.map((r) => describe(r, { config, site: data.site, probe: data.probes[r.name] }));
 fs.writeFileSync(
   path.join(root, 'README.md'),
   readme({
@@ -160,10 +144,8 @@ fs.writeFileSync(
     now,
     leads: cards.slice(0, sel.leads.length).map((c) => c.d),
     fresh: cards.slice(sel.leads.length).map((c) => c.d),
-    brief: describeAll(sel.brief),
     wire: commits,
     calendar: data.calendar,
-    posts: data.posts,
     hasStats,
     hasActivity,
   }),
@@ -171,11 +153,11 @@ fs.writeFileSync(
 
 // the run's notes (shown on the Actions run page)
 const notes = [
-  `${sel.leads.length} featured, ${sel.fresh.length} recently shipped, ${sel.brief.length} more projects.`,
+  `${sel.leads.length} featured, ${sel.fresh.length} recently shipped. ${sel.brief.length} other projects aren't on the page (it shows only the main ones).`,
   ...data.warnings.map((w) => `- ⚠️ ${w}`),
   ...sel.missingLeads.map((n) => `- ⚠️ \`lead\` names "${n}", which isn't a public repo.`),
   ...(sel.silent.length ? [`- Not shown, because they have no description, site or topics: ${sel.silent.map((n) => `\`${n}\``).join(', ')}. Add a description on GitHub (or a \`repos\` entry in config.json) to bring one in.`] : []),
-  ...cards.filter((c) => !c.pic).map((c) => `- ${c.d.title}: no picture found, so its thumbnail is drawn from its commits.`),
+  ...cards.filter((c) => !c.pic).map((c) => `- ${c.d.title}: no picture found, so its card uses cover art.`),
 ];
 log('\n' + notes.join('\n'));
 if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, notes.join('\n') + '\n');

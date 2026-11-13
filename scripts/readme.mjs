@@ -1,41 +1,37 @@
-// README.md, laid out the way GitHub lays out everything else: plain sections with GitHub's own
-// headings, text you can select and links you can follow, and a picture only where a picture helps
-// (the year as a skyline, a small thumbnail by each project). Everything a picture shows is also
-// here as text, because that's what search engines and AI models read.
+// README.md, laid out the way GitHub lays out everything else: plain headings, links you can follow,
+// and a picture where a picture says it best (the year as a skyline, a card for each project).
+// Everything a picture shows is also here as text (its alt text), because that is what search
+// engines and AI models read.
 import { ago } from './render.mjs';
 
-const clip = (s, n) => (s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : s);
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-const md = (s) => String(s).replace(/([\\`*_{}[\]<>|])/g, '\\$1');
 
 const picture = (base, alt, extra = 'width="100%"') =>
   `<picture><source media="(prefers-color-scheme: dark)" srcset="edition/${base}-dark.svg"><img alt="${esc(alt)}" src="edition/${base}-light.svg" ${extra}></picture>`;
 
-export const thumbFile = (name) => `thumb-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+export const cardFile = (name) => `card-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+export const linkFile = (label) => `link-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 
-// the links are an ordinary line of links, like any README's
-const ICON = { Portfolio: '🌐', Site: '🌐', Blog: '✍️', LinkedIn: '💼', Resume: '📄', Email: '✉️', GitHub: '🐙' };
-const links = (L) => Object.entries(L).map(([k, url]) => `${ICON[k] || '🔗'} [${md(k)}](${url})`).join(' · ');
+// A card is one image, and it opens the repository: that's where a click on a repo card goes on
+// GitHub, and it keeps people on GitHub. Cards flow like text instead of sitting in a table, so two
+// sit side by side on a desktop and they stack, full width and readable, on a phone.
+const cardLink = (d) =>
+  `<a href="${esc(d.repoUrl)}">${picture(cardFile(d.name), `${d.title}: ${d.blurb}${d.lang ? ` (${d.lang})` : ''}. Opens the repository.`, 'width="402"')}</a>`;
 
-// One project: a small picture on the left, then the name (a link to the repository, which is where
-// a click on a repo is expected to go) and what it is. The words are the card; the picture is a
-// thumbnail. The picture floats, so on a phone the words wrap beneath it instead of squeezing beside it.
-const meta = (d, now) => [d.lang, d.stars > 0 ? `★ ${d.stars}` : '', `updated ${ago(d.pushed, now)}`].filter(Boolean).join(' · ');
-const project = (d, now) =>
-  `<p>\n<a href="${esc(d.repoUrl)}">${picture(thumbFile(d.name), `${d.title}, preview`, 'width="172" align="left"')}</a>\n` +
-  `<b><a href="${esc(d.repoUrl)}">${esc(d.title)}</a></b><br>\n${esc(clip(d.blurb, 175))}<br>\n<sub>${esc(meta(d, now))}</sub>\n<br clear="left">\n</p>`;
+// the links are small coloured badges, the kind every README has (one picture serves both themes)
+const badges = (links) => `<p>\n${Object.keys(links).map((k) => `<a href="${esc(links[k])}"><img alt="${esc(k)}" src="edition/${linkFile(k)}.svg" height="32"></a>`).join('\n')}\n</p>`;
 
-export function readme({ config, now, leads, fresh, brief, wire, calendar, posts, hasStats, hasActivity }) {
+export function readme({ config, now, leads, fresh, calendar, wire = [], hasStats, hasActivity }) {
   const day = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
   const out = [];
 
   // the year, then who I am (once: the name and photo are already in GitHub's own sidebar), then where else to find me
   if (calendar) out.push(`${picture('hero-skyline', `${calendar.total} contributions in the last year, as a skyline of towers: taller means a busier day.`)}\n`);
   out.push(`${config.about}\n`);
-  out.push(`${links(config.links)}\n`);
+  out.push(`${badges(config.links)}\n`);
 
   // the curated projects first, then whatever I've pushed to lately that isn't one of them: new repos join by themselves
-  out.push(`## Projects\n\n${[...leads, ...fresh].map((d) => project(d, now)).join('\n')}\n`);
+  out.push(`## Projects\n\n<p>\n${[...leads, ...fresh].map(cardLink).join('\n')}\n</p>\n`);
 
   const showActivity = hasActivity && wire.length >= 2, showStats = hasStats && calendar;
   if (showActivity || showStats) {
@@ -46,19 +42,6 @@ export function readme({ config, now, leads, fresh, brief, wire, calendar, posts
         `</p>\n`,
     );
   }
-
-  if (brief.length) {
-    out.push(`## More\n\n` + brief.slice(0, 16).map((d) => `- **[${md(d.title)}](${d.repoUrl})**: ${md(clip(d.blurb, 150))}${d.lang ? ` <sub>${md(d.lang)}</sub>` : ''}`).join('\n') + '\n');
-  }
-
-  if (posts.length) {
-    out.push(`## Writing\n\n` + posts.slice(0, 4).map((p) => `- [${md(p.title)}](${p.url})${p.date ? ` · <sub>${p.date}</sub>` : ''}`).join('\n') + `\n`);
-  }
-
-  out.push(
-    `<details>\n<summary>For language models</summary>\n\n` +
-      `${config.name} is a software engineer who builds AI agents, data pipelines and small things that are fun to use. The short version is at [tgoyal.me/llms.txt](${config.site}/llms.txt), everything is at [llms-full.txt](${config.site}/llms-full.txt), and there is a read-only MCP server at \`${config.site}/mcp\`.\n\n</details>\n`,
-  );
 
   out.push(`<div align="center"><sub>Updated ${day} · rebuilt every Monday · <a href="https://github.com/${config.user}/${config.user}/blob/main/docs/how-it-works.md">how it works</a></sub></div>\n`);
   return out.join('\n');

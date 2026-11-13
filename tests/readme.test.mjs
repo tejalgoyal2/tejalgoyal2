@@ -10,11 +10,10 @@ const config = {
 };
 const d = (name, o = {}) => ({ name, title: name, blurb: `What ${name} does, in a line.`, lang: 'Rust', stars: 0, pushed: '2026-11-01T00:00:00Z', repoUrl: `https://github.com/u/${name}`, ...o });
 const now = new Date('2026-11-05T12:00:00Z');
-const md = readme({ config, now, leads: [d('a'), d('b', { stars: 2 })], fresh: [d('c')], brief: [d('m', { blurb: 'A & B <tag>' })], wire: [], calendar: { total: 700, commits: 600, prs: 3, weeks: [] }, posts: [{ title: 'Post', url: 'https://b.example/p', date: '2026-06-08' }], hasStats: false, hasActivity: false });
+const md = readme({ config, now, leads: [d('a'), d('b', { blurb: 'A & B <tag>' })], fresh: [d('c')], wire: [], calendar: { total: 700, commits: 600, prs: 3, weeks: [] }, hasStats: false, hasActivity: false });
 
-test('the links are an ordinary line of links, not pictures', () => {
-  assert.match(md, /\[Portfolio\]\(https:\/\/tgoyal\.me\) · .*\[Blog\]\(https:\/\/b\.example\) · .*\[LinkedIn\].* · .*\[Resume\]/);
-  assert.doesNotMatch(md, /edition\/link-/);
+test('the links are small badges that open the right places', () => {
+  for (const [k, url] of Object.entries(config.links)) assert.match(md, new RegExp(`<a href="${url.replace(/[.*+?^${}()|[\]\\\/]/g, '\\$&')}"><img alt="${k}" src="edition/link-${k.toLowerCase()}\\.svg" height="32"></a>`));
 });
 
 test('who I am is said once: no tagline panel beside the intro', () => {
@@ -22,19 +21,17 @@ test('who I am is said once: no tagline panel beside the intro', () => {
   assert.doesNotMatch(md, /hero-profile/);
 });
 
-test('each project is a thumbnail and a linked name with its line, and the name goes to the repository', () => {
-  assert.equal((md.match(/<br clear="left">/g) || []).length, 3);
-  assert.match(md, /<b><a href="https:\/\/github\.com\/u\/a">a<\/a><\/b><br>\nWhat a does, in a line\.<br>\n<sub>Rust · updated 4d ago<\/sub>/);
-  assert.match(md, /★ 2/);
-  assert.doesNotMatch(md, /edition\/card-|live at|Opens the repository/);
+test('the page is the skyline, the intro, the links and the projects: no extra sections', () => {
+  assert.deepEqual([...md.matchAll(/^## (.+)$/gm)].map((m) => m[1]), ['Projects']);
+  assert.doesNotMatch(md, /For language models|## More|## Writing|llms\.txt/);
 });
 
-test('the thumbnail’s description doesn’t repeat the words beside it', () => {
-  const alts = [...md.matchAll(/alt="([^"]*)"/g)].map((m) => m[1]);
-  for (const alt of alts.filter((x) => /preview/.test(x))) assert.doesNotMatch(alt, /does, in a line/);
+test('each project is a card that opens its repository', () => {
+  assert.equal((md.match(/edition\/card-/g) || []).length, 6); // three projects, light and dark
+  assert.match(md, /<a href="https:\/\/github\.com\/u\/a"><picture>/);
 });
 
 test('text from other sites can’t add markup', () => {
-  assert.match(md, /A & B \\<tag\\>/); // the brackets are escaped, so it prints as text
-  assert.doesNotMatch(md, /[^\\]<tag>/);
+  assert.match(md, /A &amp; B &lt;tag>/); // in a card's description (its alt text), escaped
+  assert.doesNotMatch(md, /alt="[^"]*<tag>/);
 });

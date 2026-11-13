@@ -6,14 +6,13 @@ The profile at [github.com/tejalgoyal2](https://github.com/tejalgoyal2) rebuilds
 
 `.github/workflows/edition.yml` runs `node scripts/build.mjs` on a schedule (Mondays 13:17 UTC), on every change to the config or the generator, and on demand (Actions tab → *Print the edition* → *Run workflow*). It commits only when something changed.
 
-1. **Collect** (`scripts/collect.mjs`): public repos, their languages, the newest real commits, the contribution calendar, the blog's feed, my avatar, and what tgoyal.me's own MCP server says about my projects.
+1. **Collect** (`scripts/collect.mjs`): public repos, their languages, the newest real commits, the contribution calendar, my avatar, and what tgoyal.me's own MCP server says about my projects.
 2. **Choose** (`scripts/select.mjs`):
    - *Projects* (each with a small picture): the repos named in `config.json → lead`, in that order, then anything else pushed to in the last 45 days that has a description, a site or topics. **A new repo shows up here by itself.**
-   - *More* (a plain list): every other repo with something to say.
    - Forks, archived, private and hidden repos, and GitHub-course repos never show.
-3. **Picture** (`scripts/previews.mjs`): each project's thumbnail is its own share image (`og:image`) if it has one, else a screenshot of its live site, else a picture drawn from its own commits: a grid of squares in the colour of its main language, one tower per week, one lit block per few commits. Pictures live in `assets/shots/` and are only replaced when they visibly change.
-4. **Draw** (`scripts/render.mjs`): an isometric skyline of the year's contributions (the towers rise once when the page loads), the project thumbnails, and the preview image for `tgoyal.me/github` (`edition/social.png`). A git graph of recent commits and a year-in-numbers panel are drawn too if you switch them on (`show` in `config.json`). Every word is an outline, so nothing depends on the viewer's fonts. Each piece is drawn twice, light and dark.
-5. **Write** (`scripts/readme.mjs`): the README: one intro, a plain line of links, the projects, the rest as lists. Every picture is also present as text, because that is what search engines and AI models read.
+3. **Picture** (`scripts/previews.mjs`): each card's banner is the project's own share image (`og:image`) if it has one, else a screenshot of its live site, else a generated cover: a commit-grid in the colour of its main language. Pictures live in `assets/shots/` and are only replaced when they visibly change.
+4. **Draw** (`scripts/render.mjs`): an isometric skyline of the year's contributions (the towers rise once when the page loads), the project cards, the link badges, and the preview image for `tgoyal.me/github` (`edition/social.png`). A git graph of recent commits and a year-in-numbers panel are drawn too if you switch them on (`show` in `config.json`). Every word is an outline, so nothing depends on the viewer's fonts. Each piece is drawn twice, light and dark.
+5. **Write** (`scripts/readme.mjs`): the README: the skyline, one intro, the link badges and the project cards. Nothing else. Every picture is also present as text, because that is what search engines and AI models read.
 
 ## What to edit
 
