@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { collect, probe } from './collect.mjs';
 import { select, describe } from './select.mjs';
 import { preview } from './previews.mjs';
-import { heroSkyline, card, badge, BADGES, activity, activityHeight, stats, calendarFacts, social } from './render.mjs';
+import { heroSkyline, card, blurbLines, badge, BADGES, activity, activityHeight, stats, calendarFacts, social } from './render.mjs';
 import { readme, cardFile, linkFile } from './readme.mjs';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -114,10 +114,11 @@ const cal = data.calendar;
 const langs = (data.languages || []).filter(([n]) => n !== 'Jupyter Notebook' || config.countNotebooks);
 const hasStats = !!cal && !!config.show?.stats;
 const hasActivity = !!config.show?.activity;
+const cardLines = Math.max(1, ...cards.map((c) => blurbLines(c.d.blurb))); // every card leaves room for the longest line, so a row lines up
 
 for (const theme of ['light', 'dark']) {
   if (cal) put(`hero-skyline-${theme}.svg`, heroSkyline(theme, { weeks: cal.weeks, total: cal.total }));
-  for (const { d, pic } of cards) put(`${cardFile(d.name)}-${theme}.svg`, card(theme, { ...d, image: pic }, now));
+  for (const { d, pic } of cards) put(`${cardFile(d.name)}-${theme}.svg`, card(theme, { ...d, image: pic }, now, cardLines));
   const ph = Math.max(activityHeight(commits.length), 620); // the activity and stats panels sit side by side, so they share a height
   if (config.show?.activity && commits.length >= 2) put(`activity-${theme}.svg`, activity(theme, commits, now, ph));
   if (config.show?.stats && cal) {

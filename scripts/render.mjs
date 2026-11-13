@@ -1,15 +1,14 @@
 // The pieces of the profile, drawn as SVG in GitHub's own look: Primer's colours (light and dark
 // are each designed on their own, not one flipped into the other), GitHub's typefaces, and the
 // contribution greens. What's new is made out of the data:
-//   skyline   the last year's contributions as an isometric skyline that rises when you arrive
-//   card      a repo card with a picture on top (its own share image, a screenshot, or a
-//             generated commit-grid cover tinted in its language's colour)
+//   skyline   the last year's contributions as an isometric skyline
+//   card      a repo card: a short strip of the project's picture (its own share image, a
+//             screenshot, or a generated commit-grid in its language's colour), then its name and
+//             what it is, set large
 //   badge     a small coloured link badge, the kind a README has
 //   activity  your latest commits as a git graph, one lane per repo (off unless switched on)
 //   stats     the year in numbers and a language bar (off unless switched on)
-// Every word is an outline (scripts/type.mjs). Motion is CSS only and runs once, on arrival; the
-// base state is always the finished picture, so with prefers-reduced-motion, or in anything that
-// doesn't run animations, you simply see it done.
+// Every word is an outline (scripts/type.mjs). Nothing moves: it's a page people read, not a show.
 import { line, block, measure, fitSize } from './type.mjs';
 
 export const THEMES = {
@@ -51,7 +50,7 @@ const shade = (c, f) => toHex(hex(c).map((v) => v * f));
 const svg = (w, h, { title, desc, css = '' }, body) =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img" aria-labelledby="t d">` +
   `<title id="t">${esc(title)}</title><desc id="d">${esc(desc)}</desc>` +
-  `<style>${css}@media (prefers-reduced-motion: reduce){*{animation:none!important}}</style>${body}</svg>\n`;
+  (css ? `<style>${css}</style>` : '') + `${body}</svg>\n`;
 
 /** "3d ago", "2w ago", "Oct 2025" */
 export function ago(iso, now = new Date()) {
@@ -87,11 +86,7 @@ const star = (cx, cy, r, fill) => {
 
 // ─── the year as a skyline ───────────────────────────────────────────────────
 
-/**
- * The contribution calendar as an isometric bar chart, in GitHub's greens. The ground is one flat
- * layer; the towers stand on it in slices, one slice per diagonal row. A slice's towers share a
- * ground line, so a slice can rise as one piece: about sixty things move instead of three hundred.
- */
+/** The contribution calendar as an isometric bar chart, in GitHub's greens. Still: one flat shape per day. */
 export function skyline(t, weeks, cx, top, s = 10, H = 84) {
   const a = s * 0.866, b = s * 0.5, gap = 0.86;
   const max = Math.max(1, ...weeks.flatMap((w) => w.days.map((d) => d.count)));
@@ -99,27 +94,23 @@ export function skyline(t, weeks, cx, top, s = 10, H = 84) {
   cells.sort((p, q) => p.i + p.j - (q.i + q.j) || p.i - q.i); // back to front
   const x0 = cx - ((weeks.length - 1 - 6) * a) / 2, y0 = top + H + b;
   const P = (...pts) => pts.map(([x, y]) => `${r1(x)},${r1(y)}`).join(' ');
-  const ground = [], slices = new Map();
-  for (const { i, j, d } of cells) {
-    const X = x0 + (i - j) * a, Y = y0 + (i + j) * b, A = a * gap, B = b * gap;
-    const flat = (h, c) => `<polygon points="${P([X, Y - h - B], [X + A, Y - h], [X, Y - h + B], [X - A, Y - h])}" fill="${c}"/>`;
-    ground.push(flat(0, t.contrib[0])); // every day has its patch of ground, with or without a tower on it
-    if (!d.count) continue;
-    const level = Math.min(4, Math.max(1, Math.ceil((4 * d.count) / max)));
-    const h = Math.max(4, Math.sqrt(d.count / max) * H);
-    const c = t.contrib[level];
-    const tower =
-      `<polygon points="${P([X - A, Y - h], [X, Y - h + B], [X, Y + B], [X - A, Y])}" fill="${shade(c, 0.78)}"/>` +
-      `<polygon points="${P([X + A, Y - h], [X, Y - h + B], [X, Y + B], [X + A, Y])}" fill="${shade(c, 0.6)}"/>` + flat(h, c);
-    slices.set(i + j, (slices.get(i + j) || '') + tower);
-  }
-  const n = weeks.length + 6;
-  const rising = [...slices].map(([k, g]) => `<g class="s" style="--d:${((k / n) * 1.5).toFixed(2)}s">${g}</g>`);
-  return ground.join('') + rising.join('');
+  return cells
+    .map(({ i, j, d }) => {
+      const X = x0 + (i - j) * a, Y = y0 + (i + j) * b, A = a * gap, B = b * gap;
+      const level = d.count === 0 ? 0 : Math.min(4, Math.max(1, Math.ceil((4 * d.count) / max)));
+      const h = d.count === 0 ? 0 : Math.max(4, Math.sqrt(d.count / max) * H);
+      const c = t.contrib[level];
+      const sides = h
+        ? `<polygon points="${P([X - A, Y - h], [X, Y - h + B], [X, Y + B], [X - A, Y])}" fill="${shade(c, 0.78)}"/>` +
+          `<polygon points="${P([X + A, Y - h], [X, Y - h + B], [X, Y + B], [X + A, Y])}" fill="${shade(c, 0.6)}"/>`
+        : '';
+      return sides + `<polygon points="${P([X, Y - h - B], [X + A, Y - h], [X, Y - h + B], [X - A, Y - h])}" fill="${c}"/>`;
+    })
+    .join('');
 }
 
 /**
- * The year as one wide picture: the number on the left, the skyline rising on the right.
+ * The year as one wide picture: the number on the left, the skyline on the right.
  * No frame, so it sits on the page the way GitHub's own contribution graph does.
  */
 export function heroSkyline(theme, data) {
@@ -138,11 +129,7 @@ export function heroSkyline(theme, data) {
   }
   out.push(T('mono', 'More', x + 4, H - 12, 15, t.muted));
   out.push(skyline(t, data.weeks, 556, 0, 9.4, 82));
-  // The towers grow up from the ground once, as a wave from the oldest day to the newest, and then
-  // nothing moves at all: no loop, so nothing keeps repainting. Each slice only changes its height
-  // (scaleY about its ground line), and the end state is the drawn picture.
-  const css = `.s{transform-box:fill-box;transform-origin:50% 100%;animation:rise 1.3s cubic-bezier(.25,.8,.3,1) var(--d) backwards}@keyframes rise{from{transform:scaleY(0)}}`;
-  return svg(W, H, { title: 'Contributions', desc: `${data.total} contributions in the last year, drawn as an isometric skyline: taller, darker towers are busier days.`, css }, out.join(''));
+  return svg(W, H, { title: 'Contributions', desc: `${data.total} contributions in the last year, drawn as an isometric skyline: taller, darker towers are busier days.` }, out.join(''));
 }
 
 // ─── cover art for repos with nothing to show: a commit grid in the language's colour ─────
@@ -158,72 +145,65 @@ export function cover(theme, title, lang, x, y, w, h) {
   const rnd = seeded(title);
   const base = langColor(lang);
   const ramp = [t.contrib[0], mix(t.canvas, base, 0.3), mix(t.canvas, base, 0.55), mix(t.canvas, base, 0.8), base];
-  const waves = Array.from({ length: 3 }, () => ({ fx: 0.02 + rnd() * 0.05, fy: 0.03 + rnd() * 0.08, p: rnd() * 6.28 }));
-  const pitch = 24, size = 19;
+  const waves = Array.from({ length: 3 }, () => ({ fx: 0.03 + rnd() * 0.06, fy: 0.04 + rnd() * 0.1, p: rnd() * 6.28 }));
+  const rows = Math.max(1, Math.round(h / 22)), pitch = h / rows, size = pitch - 5; // whole rows, so nothing is cut off
   const cells = [];
-  for (let j = 0; j * pitch < h; j++)
+  for (let j = 0; j < rows; j++)
     for (let i = 0; i * pitch < w; i++) {
       const v = waves.reduce((s, k) => s + Math.sin(i * k.fx * 6.28 + k.p) * Math.cos(j * k.fy * 6.28 + k.p), 0) / 3 + (rnd() - 0.5) * 0.55;
       const level = v < -0.12 ? 0 : v < 0.08 ? 1 : v < 0.26 ? 2 : v < 0.4 ? 3 : 4;
-      cells.push(`<rect x="${i * pitch + 3}" y="${j * pitch + 3}" width="${size}" height="${size}" rx="4" fill="${ramp[level]}"/>`);
+      cells.push(`<rect x="${r1(i * pitch + 2.5)}" y="${r1(j * pitch + 2.5)}" width="${r1(size)}" height="${r1(size)}" rx="4" fill="${ramp[level]}"/>`);
     }
-  const label = Math.min(66, fitSize('bold', title, w - 150));
-  const tw = measure('bold', title, label);
-  return (
-    `<g transform="translate(${x} ${y})"><clipPath id="cv"><rect width="${w}" height="${h}"/></clipPath><rect width="${w}" height="${h}" fill="${t.subtle}"/>` +
-    `<g clip-path="url(#cv)">${cells.join('')}</g>` +
-    `<rect x="36" y="${h - 96}" width="${r1(tw + 52)}" height="${r1(label + 38)}" rx="12" fill="${t.canvas}" stroke="${t.border}" stroke-width="2"/>` +
-    T('bold', title, 62, h - 96 + label + 4, label, t.fg) +
-    `</g>`
-  );
+  return `<g transform="translate(${x} ${y})"><rect width="${w}" height="${h}" fill="${t.subtle}"/>${cells.join('')}</g>`;
 }
 
-// ─── a project card: GitHub's repo card, with a picture on top ───────────────
+const CARD_TEXT = { size: 28, lead: 38, width: 728 };
+/** How many lines a project's one-liner takes on its card (at most 3): the cards in a row all use the longest. */
+export const blurbLines = (blurb) => block('text', blurb, 0, 0, CARD_TEXT.size, CARD_TEXT.width, { lead: CARD_TEXT.lead, maxLines: 3 }).lines;
 
 /**
- * A repo card, as quiet as GitHub's own: a picture, "owner / name", what it is, and a footer.
- * @param repo {{ name:string, title:string, blurb:string, lang?:string, stars:number, forks?:number, pushed:string,
+ * A repo card where the words are the card: a short strip of the project's picture, then its name and
+ * what it is, big enough to read at a glance, and a quiet footer.
+ * @param repo {{ name:string, title:string, blurb:string, lang?:string, stars:number, pushed:string,
  *               owner:string, image?:{mime:string,b64:string} }}
+ * @param lines how many lines of one-liner to leave room for (see blurbLines)
  */
-export function card(theme, repo, now = new Date()) {
+export function card(theme, repo, now = new Date(), lines = 2) {
   const t = THEMES[theme];
-  const W = 800, H = 520, IH = 300, P = 36;
+  const W = 800, IH = 130, P = 36;
+  const ty = IH + 60, by = ty + 52, fy = by + (Math.max(1, lines) - 1) * CARD_TEXT.lead + 54, H = fy + 32;
   const out = [];
   out.push(`<clipPath id="r"><rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="18"/></clipPath>`);
   out.push(`<rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="18" fill="${t.canvas}"/>`);
   out.push(`<g clip-path="url(#r)">`);
   if (repo.image) {
     out.push(`<rect width="${W}" height="${IH}" fill="${t.subtle}"/>`);
-    out.push(`<image href="data:${repo.image.mime};base64,${repo.image.b64}" width="${W}" height="${IH}" preserveAspectRatio="xMidYMin slice"/>`);
+    // a nested svg clips the picture to the strip
+    out.push(`<svg width="${W}" height="${IH}"><image href="data:${repo.image.mime};base64,${repo.image.b64}" y="-30" width="${W}" height="${W * 0.375}" preserveAspectRatio="xMidYMin slice"/></svg>`);
   } else out.push(cover(theme, repo.title, repo.lang, 0, 0, W, IH));
   out.push(`<rect y="${IH}" width="${W}" height="2" fill="${t.border}"/></g>`);
   out.push(`<rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="18" fill="none" stroke="${t.border}" stroke-width="2"/>`);
 
-  // "owner / name": the owner muted, the name in link blue, as on GitHub
-  const ty = IH + 62;
-  out.push(`<rect x="${P}" y="${ty - 22}" width="20" height="26" rx="3" fill="none" stroke="${t.muted}" stroke-width="2.5"/><rect x="${P + 4}" y="${ty - 7}" width="12" height="2.5" fill="${t.muted}"/>`);
-  const slash = `${repo.owner} / `;
-  const nsz = Math.min(32, fitSize('semibold', slash + repo.title, W - 2 * P - 36));
-  const sw = measure('text', slash, nsz);
-  out.push(T('text', slash, P + 34, ty, nsz, t.muted));
-  out.push(T('semibold', repo.title, P + 34 + sw, ty, nsz, t.accent));
+  // the name, in link blue as on GitHub, with the repo icon
+  out.push(`<rect x="${P}" y="${ty - 25}" width="22" height="29" rx="3" fill="none" stroke="${t.muted}" stroke-width="2.5"/><rect x="${P + 4}" y="${ty - 8}" width="14" height="2.5" fill="${t.muted}"/>`);
+  out.push(T('semibold', repo.title, P + 38, ty, Math.min(36, fitSize('semibold', repo.title, W - 2 * P - 38)), t.accent));
 
-  out.push(path(block('text', repo.blurb, P, ty + 50, 25, W - 2 * P, { lead: 34, maxLines: 2 }).d, t.muted));
+  // what it is: the main thing after the name, so it's set large and in the full text colour
+  out.push(path(block('text', repo.blurb, P, by, CARD_TEXT.size, CARD_TEXT.width, { lead: CARD_TEXT.lead, maxLines: 3 }).d, t.fg));
 
   // foot: language, stars, updated
-  const fy = H - 34;
   let fx = P;
   if (repo.lang) {
     out.push(`<circle cx="${fx + 8}" cy="${fy - 7}" r="8" fill="${langColor(repo.lang)}"/>`);
-    const l = line('text', repo.lang, fx + 26, fy, 21);
+    const l = line('text', repo.lang, fx + 26, fy, 20);
     out.push(path(l.d, t.muted));
     fx += 26 + l.width + 26;
   }
   if (repo.stars > 0) {
     out.push(star(fx + 9, fy - 7, 10, t.muted));
-    out.push(T('text', String(repo.stars), fx + 28, fy, 21, t.muted));
+    out.push(T('text', String(repo.stars), fx + 28, fy, 20, t.muted));
   }
-  out.push(T('text', `Updated ${ago(repo.pushed, now)}`, W - P, fy, 21, t.muted, { anchor: 'end' }));
+  out.push(T('text', `Updated ${ago(repo.pushed, now)}`, W - P, fy, 20, t.muted, { anchor: 'end' }));
   return svg(W + 20, H + 20, { title: repo.title, desc: `${repo.title}: ${repo.blurb}` }, `<g transform="translate(10 10)">${out.join('')}</g>`);
 }
 

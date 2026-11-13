@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { XMLParser, XMLValidator } from 'fast-xml-parser';
-import { heroSkyline, card, badge, BADGES, activity, stats, calendarFacts, cover, ago, mix, langColor, social, THEMES } from '../scripts/render.mjs';
+import { heroSkyline, card, blurbLines, badge, BADGES, activity, stats, calendarFacts, cover, ago, mix, langColor, social, THEMES } from '../scripts/render.mjs';
 const THEME_ACCENT_BG = '#ddf4ff'; // the light theme's topic-chip background
 
 const repo = { name: 'x', owner: 'u', title: 'A <b>"risky"</b> & title', blurb: 'Short blurb for the card, with an apostrophe’s worth of type.', lang: 'Rust', stars: 3, forks: 1, pushed: '2026-11-01T00:00:00Z', host: 'x.example.com', topics: ['a', 'b'], live: true, isNew: true };
@@ -48,31 +48,15 @@ test('nothing from outside gets in as markup: a title can’t add elements, scri
   assert.match(svg, /&lt;script&gt;/); // it's printed as text, escaped
 });
 
-test('every piece switches animation off for reduced motion', () => {
-  for (const svg of Object.values(pieces('dark'))) assert.match(svg, /prefers-reduced-motion: reduce\)\{\*\{animation:none!important\}/);
+test('nothing moves: no animation, no script, no style that could', () => {
+  for (const svg of Object.values(pieces('dark'))) assert.doesNotMatch(svg, /@keyframes|animation|<animate|<script/i);
 });
 
-test('motion ends on the finished picture: the towers rise once, nothing loops, nothing is held hidden', () => {
-  for (const svg of Object.values(pieces('light'))) {
-    assert.doesNotMatch(svg, /infinite|opacity:0[;}]|forwards|both/); // no loop to keep repainting; never ends invisible or collapsed
-  }
+test('the skyline draws a tower for every day with something in it, and flat ground for the rest', () => {
   const sky = heroSkyline('light', { weeks, total: 1 });
-  assert.match(sky, /@keyframes rise\{from\{transform:scaleY\(0\)\}\}/); // it states only where a rise starts: it ends on the drawn tower
-});
-
-test('the towers rise in slices, one per diagonal row, so only about sixty things animate rather than every tower', () => {
-  const sky = heroSkyline('light', { weeks, total: 1 });
-  const slices = (sky.match(/class="s"/g) || []).length;
-  assert.ok(slices > 0 && slices <= weeks.length + 6, `${slices} slices`);
+  const polygons = (sky.match(/<polygon/g) || []).length;
   const busy = weeks.flatMap((w) => w.days).filter((d) => d.count > 0).length;
-  const towers = (sky.slice(sky.indexOf('class="s"')).match(/<polygon/g) || []).length / 3;
-  assert.equal(towers, busy); // every busy day still has its tower (two sides and a top)
-});
-
-test('every day has ground to stand on, drawn once and never animated', () => {
-  const sky = heroSkyline('dark', { weeks, total: 1 });
-  const ground = sky.slice(0, sky.indexOf('class="s"'));
-  assert.ok((ground.match(new RegExp(`fill="${THEMES.dark.contrib[0]}"`, 'g')) || []).length >= weeks.length * 7);
+  assert.equal(polygons, weeks.length * 7 + 2 * busy); // a top for every day, plus two sides for each tower
 });
 
 test('the cover is the same every time for the same name, and differs between names', () => {
@@ -101,10 +85,17 @@ test('the streak and the busiest day come from the calendar', () => {
   assert.deepEqual(calendarFacts([wk([0, 0])]), { streak: 0, busiest: null });
 });
 
-test('the card is quiet: a picture, a name, a line about it, and a footer, with no labels or chips', () => {
+test('the card is quiet and its words are the card: a short picture, a name, the line about it, and a footer, with no labels or chips', () => {
   const svg = card('light', { ...repo, live: true, isNew: true, host: 'x.example.com', topics: ['a', 'b'] }, now);
   assert.doesNotMatch(svg, /rx="1[67]"[^>]*stroke="#(1a7f37|8250df)"/);
   assert.doesNotMatch(svg, new RegExp(THEME_ACCENT_BG));
+});
+
+test('the card is short, and the words get more room when the line is longer', () => {
+  const h = (svg) => Number(svg.match(/viewBox="0 0 \d+ (\d+)"/)[1]);
+  assert.ok(h(card('light', repo, now, 2)) < 420);
+  assert.ok(h(card('light', repo, now, 3)) > h(card('light', repo, now, 2)));
+  assert.ok(blurbLines('A short line.') === 1 && blurbLines('word '.repeat(80)) === 3);
 });
 
 test('a badge is one coloured picture with white lettering, the same on light and dark', () => {
