@@ -1,7 +1,5 @@
 // README.md, laid out the way GitHub lays out everything else: plain headings, links you can follow,
-// and a picture where a picture says it best (the year as a skyline, a card for each project).
-// Everything a picture shows is also here as text (its alt text), because that is what search
-// engines and AI models read.
+// and a picture only where a picture says it best (the year as a skyline).
 import { ago } from './render.mjs';
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
@@ -9,14 +7,11 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').repl
 const picture = (base, alt, extra = 'width="100%"') =>
   `<picture><source media="(prefers-color-scheme: dark)" srcset="edition/${base}-dark.svg"><img alt="${esc(alt)}" src="edition/${base}-light.svg" ${extra}></picture>`;
 
-export const cardFile = (name) => `card-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 export const linkFile = (label) => `link-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 
-// A card is one image, and it opens the repository: that's where a click on a repo card goes on
-// GitHub, and it keeps people on GitHub. Cards flow like text instead of sitting in a table, so two
-// sit side by side on a desktop and they stack, full width and readable, on a phone.
-const cardLink = (d) =>
-  `<a href="${esc(d.repoUrl)}">${picture(cardFile(d.name), `${d.title}: ${d.blurb}${d.lang ? ` (${d.lang})` : ''}. Opens the repository.`, 'width="402"')}</a>`;
+// A project is one line: its name, linked to the repository, and what it is. Plain text, so it reads
+// the way everything else on GitHub reads, and it's all there for search engines and AI models too.
+const project = (d) => `- **[${esc(d.title)}](${esc(d.repoUrl)})**: ${esc(d.blurb)}`;
 
 // the links are small coloured badges, the kind every README has (one picture serves both themes)
 const badges = (links) => `<p>\n${Object.keys(links).map((k) => `<a href="${esc(links[k])}"><img alt="${esc(k)}" src="edition/${linkFile(k)}.svg" height="32"></a>`).join('\n')}\n</p>`;
@@ -31,7 +26,7 @@ export function readme({ config, now, leads, fresh, calendar, wire = [], hasStat
   out.push(`${badges(config.links)}\n`);
 
   // the curated projects first, then whatever I've pushed to lately that isn't one of them: new repos join by themselves
-  out.push(`## Projects\n\n<p>\n${[...leads, ...fresh].map(cardLink).join('\n')}\n</p>\n`);
+  out.push(`## Projects\n\n${[...leads, ...fresh].map(project).join('\n')}\n`);
 
   const showActivity = hasActivity && wire.length >= 2, showStats = hasStats && calendar;
   if (showActivity || showStats) {

@@ -8,11 +8,10 @@ import path from 'node:path';
 import { execSync } from 'node:child_process';
 import sharp from 'sharp';
 import { fileURLToPath } from 'node:url';
-import { collect, probe } from './collect.mjs';
+import { collect } from './collect.mjs';
 import { select, describe } from './select.mjs';
-import { preview } from './previews.mjs';
-import { heroSkyline, card, blurbLines, badge, BADGES, activity, activityHeight, stats, calendarFacts, social } from './render.mjs';
-import { readme, cardFile, linkFile } from './readme.mjs';
+import { heroSkyline, badge, BADGES, activity, activityHeight, stats, calendarFacts, social } from './render.mjs';
+import { readme, linkFile } from './readme.mjs';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = new Set(process.argv.slice(2));
@@ -46,43 +45,10 @@ const sel = select({ repos: data.repos, config, now });
 const shown = [...sel.leads, ...sel.fresh];
 log(`featured ${sel.leads.length} · recent ${sel.fresh.length} · left out ${sel.silent.length + sel.brief.length}`);
 
-// is each card's own site up, and what does it share?
-data.probes ||= {};
-if (!cached) {
-  await Promise.all(
-    shown.map(async (r) => {
-      const home = config.repos?.[r.name]?.live || r.homepage;
-      if (home) data.probes[r.name] = await probe(home);
-    }),
-  );
-  // a project's picture can also be named outright (config.repos.<name>.image)
-  for (const r of shown) {
-    const img = config.repos?.[r.name]?.image;
-    if (img) data.probes[r.name] = { ...(data.probes[r.name] || { up: true, host: '' }), ogImage: img };
-  }
-  fs.mkdirSync(path.dirname(cacheFile), { recursive: true });
-  fs.writeFileSync(cacheFile, JSON.stringify(data));
-}
-
-// pictures
-const shotsDir = path.join(root, 'assets', 'shots');
-let browser = null;
-const needsShots = !cached && shown.some((r) => data.probes[r.name]?.up && !data.probes[r.name]?.ogImage && config.repos?.[r.name]?.preview !== 'cover');
-if (needsShots) {
-  try {
-    const { chromium } = await import('playwright');
-    browser = await chromium.launch();
-  } catch (e) {
-    log(`  ! no browser for screenshots (${e.message.split('\n')[0]}); cards will use cover art`);
-  }
-}
-const cards = [];
-for (const r of shown) {
-  const d = describe(r, { config, site: data.site, probe: data.probes[r.name], now });
-  const pic = await preview({ repo: r.name, d, probe: data.probes[r.name], shotsDir, browser, log, readOnly: cached });
-  cards.push({ d, pic });
-}
-await browser?.close();
+// the words for each project (my own line from config.json, else the site's, else GitHub's)
+const cards = shown.map((r) => ({ d: describe(r, { config, site: data.site, now }) }));
+fs.mkdirSync(path.dirname(cacheFile), { recursive: true });
+if (!cached) fs.writeFileSync(cacheFile, JSON.stringify(data));
 
 // the avatar, re-encoded as a small plain JPEG (saved, so a cached run needs no network)
 const avatarFile = path.join(root, 'assets', 'avatar.jpg');
@@ -114,11 +80,9 @@ const cal = data.calendar;
 const langs = (data.languages || []).filter(([n]) => n !== 'Jupyter Notebook' || config.countNotebooks);
 const hasStats = !!cal && !!config.show?.stats;
 const hasActivity = !!config.show?.activity;
-const cardLines = Math.max(1, ...cards.map((c) => blurbLines(c.d.blurb))); // every card leaves room for the longest line, so a row lines up
 
 for (const theme of ['light', 'dark']) {
   if (cal) put(`hero-skyline-${theme}.svg`, heroSkyline(theme, { weeks: cal.weeks, total: cal.total }));
-  for (const { d, pic } of cards) put(`${cardFile(d.name)}-${theme}.svg`, card(theme, { ...d, image: pic }, now, cardLines));
   const ph = Math.max(activityHeight(commits.length), 620); // the activity and stats panels sit side by side, so they share a height
   if (config.show?.activity && commits.length >= 2) put(`activity-${theme}.svg`, activity(theme, commits, now, ph));
   if (config.show?.stats && cal) {
@@ -158,7 +122,6 @@ const notes = [
   ...data.warnings.map((w) => `- ⚠️ ${w}`),
   ...sel.missingLeads.map((n) => `- ⚠️ \`lead\` names "${n}", which isn't a public repo.`),
   ...(sel.silent.length ? [`- Not shown, because they have no description, site or topics: ${sel.silent.map((n) => `\`${n}\``).join(', ')}. Add a description on GitHub (or a \`repos\` entry in config.json) to bring one in.`] : []),
-  ...cards.filter((c) => !c.pic).map((c) => `- ${c.d.title}: no picture found, so its card uses cover art.`),
 ];
 log('\n' + notes.join('\n'));
 if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, notes.join('\n') + '\n');

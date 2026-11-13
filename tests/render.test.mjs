@@ -2,10 +2,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { XMLParser, XMLValidator } from 'fast-xml-parser';
-import { heroSkyline, card, blurbLines, badge, BADGES, activity, stats, calendarFacts, cover, ago, mix, langColor, social, THEMES } from '../scripts/render.mjs';
-const THEME_ACCENT_BG = '#ddf4ff'; // the light theme's topic-chip background
+import { heroSkyline, badge, BADGES, activity, stats, calendarFacts, ago, mix, langColor, social } from '../scripts/render.mjs';
 
-const repo = { name: 'x', owner: 'u', title: 'A <b>"risky"</b> & title', blurb: 'Short blurb for the card, with an apostrophe’s worth of type.', lang: 'Rust', stars: 3, forks: 1, pushed: '2026-11-01T00:00:00Z', host: 'x.example.com', topics: ['a', 'b'], live: true, isNew: true };
 const weeks = Array.from({ length: 53 }, (_, i) => ({ days: Array.from({ length: 7 }, (_, j) => ({ date: new Date(Date.UTC(2025, 10, 2 + i * 7 + j)).toISOString().slice(0, 10), count: (i * j) % 9 })) }));
 const commits = [
   { repo: 'a', msg: 'first thing', at: '2026-11-04T00:00:00Z', sha: 'abcdef1234' },
@@ -16,9 +14,6 @@ const now = new Date('2026-11-05T12:00:00Z');
 
 const pieces = (theme) => ({
   heroSkyline: heroSkyline(theme, { weeks, total: 676 }),
-  card: card(theme, repo, now),
-  cardNoStars: card(theme, { ...repo, stars: 0, forks: 0 }, now),
-  cardPicture: card(theme, { ...repo, image: { mime: 'image/jpeg', b64: 'AAAA' } }, now),
   badge: badge('LinkedIn', BADGES.LinkedIn),
   badgeUnknown: badge('Whatever', { icon: 'nope' }),
   activity: activity(theme, commits, now),
@@ -40,14 +35,6 @@ test('text is drawn as outlines: no <text> elements, so no font is ever needed',
   for (const svg of Object.values(pieces('light'))) assert.doesNotMatch(svg, /<text[\s>]/);
 });
 
-test('nothing from outside gets in as markup: a title can’t add elements, scripts or handlers', () => {
-  const svg = card('light', { ...repo, title: '<script>alert(1)</script><img onerror=x>' });
-  assert.equal(XMLValidator.validate(svg), true);
-  const tree = JSON.stringify(new XMLParser({ ignoreAttributes: false }).parse(svg));
-  assert.doesNotMatch(tree, /"(script|img)":|"@_on\w+":/i); // no such element, no handler attribute
-  assert.match(svg, /&lt;script&gt;/); // it's printed as text, escaped
-});
-
 test('nothing moves: no animation, no script, no style that could', () => {
   for (const svg of Object.values(pieces('dark'))) assert.doesNotMatch(svg, /@keyframes|animation|<animate|<script/i);
 });
@@ -59,12 +46,7 @@ test('the skyline draws a tower for every day with something in it, and flat gro
   assert.equal(polygons, weeks.length * 7 + 2 * busy); // a top for every day, plus two sides for each tower
 });
 
-test('the cover is the same every time for the same name, and differs between names', () => {
-  assert.equal(cover('light', 'claubi', 'Rust', 0, 0, 320, 200), cover('light', 'claubi', 'Rust', 0, 0, 320, 200));
-  assert.notEqual(cover('light', 'claubi', 'Rust', 0, 0, 320, 200), cover('light', 'type', 'Rust', 0, 0, 320, 200));
-});
-
-test('the cover is tinted in the language’s own GitHub colour; unknown languages get a neutral one', () => {
+test('language colours are GitHub’s own; unknown languages get a neutral one; unknown languages get a neutral one', () => {
   assert.equal(langColor('Rust'), '#dea584');
   assert.equal(langColor('Brainfuck'), '#8b949e');
   assert.equal(mix('#000000', '#ffffff', 0.5), '#808080');
@@ -83,19 +65,6 @@ test('the streak and the busiest day come from the calendar', () => {
   assert.equal(f.streak, 4); // 1, 1, 1 at the end of one week runs on into the 4 that starts the next
   assert.deepEqual(f.busiest, { count: 4, label: 'Mar 1' });
   assert.deepEqual(calendarFacts([wk([0, 0])]), { streak: 0, busiest: null });
-});
-
-test('the card is quiet and its words are the card: a short picture, a name, the line about it, and a footer, with no labels or chips', () => {
-  const svg = card('light', { ...repo, live: true, isNew: true, host: 'x.example.com', topics: ['a', 'b'] }, now);
-  assert.doesNotMatch(svg, /rx="1[67]"[^>]*stroke="#(1a7f37|8250df)"/);
-  assert.doesNotMatch(svg, new RegExp(THEME_ACCENT_BG));
-});
-
-test('the card is short, and the words get more room when the line is longer', () => {
-  const h = (svg) => Number(svg.match(/viewBox="0 0 \d+ (\d+)"/)[1]);
-  assert.ok(h(card('light', repo, now, 2)) < 420);
-  assert.ok(h(card('light', repo, now, 3)) > h(card('light', repo, now, 2)));
-  assert.ok(blurbLines('A short line.') === 1 && blurbLines('word '.repeat(80)) === 3);
 });
 
 test('a badge is one coloured picture with white lettering, the same on light and dark', () => {

@@ -36,40 +36,57 @@
   "repos": {
     "portfolio": {
       "title": "tgoyal.me",
-      "image": "https://raw.githubusercontent.com/tejalgoyal2/portfolio/main/docs/readme/front-page.webp",
-      "live": "https://tgoyal.me"
+      "live": "https://tgoyal.me",
+      "blurb": "My site, set like a newspaper. It reads like one right up until you touch it."
+    },
+    "Dime": {
+      "title": "dime",
+      "live": "https://dime.tgoyal.me",
+      "blurb": "An expense tracker you text like a friend. It files everything and has opinions about your spending."
     },
     "type": {
       "live": "https://type.tgoyal.me",
-      "preview": "cover",
-      "blurb": "A blank page for typing, just for the feel of it. No timer and no score: letters land with weight, the page has mass, and six styles answer your rhythm."
+      "blurb": "A blank page that exists to be typed on. No timer, no score, just how the keys feel."
+    },
+    "bide": {
+      "live": "https://bide.tgoyal.me",
+      "blurb": "Every bus on a live 3D map, plus a daily scoreboard of whether its arrival predictions were lying."
     },
     "iam-threat-mapper": {
+      "title": "iam-threat-mapper",
       "site": "IAM Threat Mapper",
       "live": "https://iam.tgoyal.me",
-      "blurb": "Five real breaches, taken apart one login at a time and mapped to the attacker’s playbook, MITRE ATT&CK."
+      "blurb": "Five real breaches, taken apart one login at a time and drawn as the attacker’s playbook."
     },
     "claubi": {
-      "blurb": "A coding agent in Rust that lives on your own machine, treats AI-written code as untrusted, and asks before it acts."
+      "blurb": "A coding agent that doesn’t trust the code it writes, and asks before it acts. Rust, on your machine."
     },
-    "Dime": {
-      "blurb": "An expense tracker you text like a friend. It reads plain English (and Hinglish), files it, and has opinions."
+    "lockin": {
+      "blurb": "A job-hunting intern that never asks for coffee. Scans job lists twice a day and files the best new roles."
+    },
+    "wiki": {
+      "live": "https://wiki.tgoyal.me",
+      "blurb": "One deep lesson a day, wired into a growing wiki of software, data and ML."
     },
     "sudoku-app": {
-      "site": "Sudoku"
+      "title": "sudoku",
+      "site": "Sudoku",
+      "live": "https://sudoku.tgoyal.me",
+      "blurb": "Nine boxes, nine digits, zero ads. A calm Sudoku built out of pure spite."
     },
     "WalletRIP": {
-      "blurb": "The original expense tracker: privacy-first, with synthetic identities and zero PII. It evolved into Dime."
+      "blurb": "The original expense tracker: privacy-first, zero personal data. It grew up into Dime."
     },
     "SmartHire": {
-      "blurb": "AI resume screening. Matches applicants to job descriptions using NLP similarity scoring in under 15 seconds."
+      "blurb": "AI resume screening. Matches applicants to job descriptions in under 15 seconds."
     },
     "threatscope": {
+      "title": "threatscope",
       "site": "ThreatScope",
-      "blurb": "An AI threat-intelligence chatbot that indexes MITRE ATT&CK, NVD CVEs and CISA KEV for plain-English questions."
+      "blurb": "A threat-intelligence chatbot you can just ask, backed by MITRE ATT&CK, CVEs and CISA’s exploited list."
     },
     "OnTop": {
-      "blurb": "A macOS menu bar utility that pins windows above everything. Built after three failed API attempts."
+      "blurb": "A macOS menu bar utility that pins windows above everything."
     },
     "Nib": {
       "blurb": "A menu bar scratchpad for macOS."

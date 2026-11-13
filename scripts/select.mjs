@@ -32,7 +32,7 @@ export function select({ repos, config, now = new Date() }) {
 }
 
 
-/** What a repo is called, what it says, and where its card links. The site's own words win when the site answers. */
+/** What a repo is called and what it says. My own line (config) wins, then the site's words, then GitHub's description. */
 export function describe(repo, { config, site = {}, probe, now = new Date() }) {
   const o = config.repos?.[repo.name] || {};
   const known = site[(o.site || repo.name).toLowerCase()];
@@ -41,7 +41,7 @@ export function describe(repo, { config, site = {}, probe, now = new Date() }) {
     name: repo.name,
     owner: config.user,
     title: o.title || known?.name || repo.name,
-    blurb: (known?.description || o.blurb || repo.description || '').trim(),
+    blurb: (o.blurb || known?.description || repo.description || '').trim(),
     lang: o.lang || repo.language,
     stars: repo.stars,
     forks: repo.forks || 0,

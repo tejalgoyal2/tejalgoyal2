@@ -37,11 +37,12 @@ test('a repo with nothing to say stays out and is named; a config blurb brings i
   assert.deepEqual(s.brief.map((r) => r.name), ['bare']);
 });
 
-test('the site’s own words win, then the config, then GitHub’s description', () => {
+test('my own line wins, then the site’s words, then GitHub’s description', () => {
   const r = repo('x', { description: 'github says' });
   assert.equal(describe(r, { config: { repos: {} }, site: {} }).blurb, 'github says');
   assert.equal(describe(r, { config: { repos: { x: { blurb: 'config says' } } }, site: {} }).blurb, 'config says');
-  assert.equal(describe(r, { config: { repos: { x: { blurb: 'config says' } } }, site: { x: { name: 'X', description: 'site says', status: 'LIVE' } } }).blurb, 'site says');
+  assert.equal(describe(r, { config: { repos: { x: { blurb: 'config says' } } }, site: { x: { name: 'X', description: 'site says', status: 'LIVE' } } }).blurb, 'config says');
+  assert.equal(describe(r, { config: { repos: {} }, site: { x: { name: 'X', description: 'site says', status: 'LIVE' } } }).blurb, 'site says');
 });
 
 test('a repo created in the last 45 days is new; one with a live site is live', () => {

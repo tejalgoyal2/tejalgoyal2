@@ -171,29 +171,3 @@ export async function collect(config, { token, publicOnly = true, log = () => {}
 
   return { repos, wire, calendar, posts, site, profile, languages, warnings, collectedAt: new Date().toISOString() };
 }
-
-/** Is the project's own site up, and does it publish a share image? */
-export async function probe(url) {
-  try {
-    const res = await fetch(url, { headers: { 'User-Agent': UA, Accept: 'text/html' }, redirect: 'follow', signal: AbortSignal.timeout(12_000) });
-    const html = res.ok ? (await res.text()).slice(0, 200_000) : '';
-    const og = html.match(/<meta[^>]+(?:property|name)=["'](?:og:image|twitter:image)["'][^>]*>/i)?.[0]?.match(/content=["']([^"']+)["']/i)?.[1];
-    let ogImage = null;
-    try {
-      if (og) ogImage = new URL(og.replace(/&amp;/g, '&'), res.url).href;
-    } catch {
-      /* no usable image */
-    }
-    return { up: res.ok, status: res.status, ogImage, host: new URL(res.url).host };
-  } catch {
-    return { up: false, status: 0, ogImage: null, host: safeHost(url) };
-  }
-}
-
-const safeHost = (u) => {
-  try {
-    return new URL(u).host;
-  } catch {
-    return '';
-  }
-};
