@@ -22,7 +22,7 @@ const links = (L) => Object.entries(L).map(([k, url]) => `${ICON[k] || '🔗'} [
 const meta = (d, now) => [d.lang, d.stars > 0 ? `★ ${d.stars}` : '', `updated ${ago(d.pushed, now)}`].filter(Boolean).join(' · ');
 const row = (d, now) =>
   `<tr>\n<td width="176" valign="top"><a href="${esc(d.repoUrl)}">${picture(thumbFile(d.name), `${d.title}, preview`, 'width="160"')}</a></td>\n` +
-  `<td valign="top"><b><a href="${esc(d.repoUrl)}">${esc(d.title)}</a></b><br>${esc(clip(d.blurb, 140))}<br><sub>${esc(meta(d, now))}</sub></td>\n</tr>`;
+  `<td valign="top"><b><a href="${esc(d.repoUrl)}">${esc(d.title)}</a></b><br>${esc(clip(d.blurb, 175))}<br><sub>${esc(meta(d, now))}</sub></td>\n</tr>`;
 
 export function readme({ config, now, leads, fresh, brief, wire, calendar, posts, hasStats, hasActivity }) {
   const day = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });

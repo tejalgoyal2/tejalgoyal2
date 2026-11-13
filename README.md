@@ -17,11 +17,11 @@ I build AI agents that talk to real systems, data pipelines that hold up, and sm
 </tr>
 <tr>
 <td width="176" valign="top"><a href="https://github.com/tejalgoyal2/type"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-type-dark.svg"><img alt="type, preview" src="edition/thumb-type-light.svg" width="160"></picture></a></td>
-<td valign="top"><b><a href="https://github.com/tejalgoyal2/type">type</a></b><br>A blank page for typing, just for the feel of it. No timer and no score: letters land with weight, the page has mass, and six styles…<br><sub>TypeScript · updated 3w ago</sub></td>
+<td valign="top"><b><a href="https://github.com/tejalgoyal2/type">type</a></b><br>A blank page for typing, just for the feel of it. No timer and no score: letters land with weight, the page has mass, and six styles answer your rhythm.<br><sub>TypeScript · updated 3w ago</sub></td>
 </tr>
 <tr>
 <td width="176" valign="top"><a href="https://github.com/tejalgoyal2/bide"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-bide-dark.svg"><img alt="bide, preview" src="edition/thumb-bide-light.svg" width="160"></picture></a></td>
-<td valign="top"><b><a href="https://github.com/tejalgoyal2/bide">bide</a></b><br>A living map of Victoria, BC: every bus moving now, with light that follows the real sun, weather and tide, and an honest scoreboard of…<br><sub>JavaScript · updated today</sub></td>
+<td valign="top"><b><a href="https://github.com/tejalgoyal2/bide">bide</a></b><br>A living map of Victoria, BC: every bus moving now, with light that follows the real sun, weather and tide, and an honest scoreboard of arrival predictions.<br><sub>JavaScript · updated today</sub></td>
 </tr>
 <tr>
 <td width="176" valign="top"><a href="https://github.com/tejalgoyal2/iam-threat-mapper"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-iam-threat-mapper-dark.svg"><img alt="IAM Threat Mapper, preview" src="edition/thumb-iam-threat-mapper-light.svg" width="160"></picture></a></td>
