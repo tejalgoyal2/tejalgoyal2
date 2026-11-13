@@ -1,4 +1,4 @@
-<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-skyline-dark.svg"><img alt="759 contributions in the last year, as a skyline of towers: taller means a busier day." src="edition/hero-skyline-light.svg" width="100%"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-skyline-dark.svg"><img alt="763 contributions in the last year, as a skyline of towers: taller means a busier day." src="edition/hero-skyline-light.svg" width="100%"></picture>
 
 I build AI agents that talk to real systems, data pipelines that hold up, and small things that are fun to use. I’m finishing an M.Eng. in Applied Data Science at the University of Victoria (December 2026). Off the clock: F1 every race weekend, speedcubing, and a serious banana bread.
 
@@ -49,6 +49,13 @@ A coding agent in Rust that lives on your own machine, treats AI-written code as
 <br clear="left">
 </p>
 <p>
+<a href="https://github.com/tejalgoyal2/lockin"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-lockin-dark.svg"><img alt="lockin, preview" src="edition/thumb-lockin-light.svg" width="172" align="left"></picture></a>
+<b><a href="https://github.com/tejalgoyal2/lockin">lockin</a></b><br>
+A job-hunting intern that never asks for coffee: it scans public job lists twice a day and files the best new entry-level roles.<br>
+<sub>Python · updated today</sub>
+<br clear="left">
+</p>
+<p>
 <a href="https://github.com/tejalgoyal2/wiki"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-wiki-dark.svg"><img alt="wiki, preview" src="edition/thumb-wiki-light.svg" width="172" align="left"></picture></a>
 <b><a href="https://github.com/tejalgoyal2/wiki">wiki</a></b><br>
 A growing, linked wiki of software, data and ML. One deep lesson a day.<br>
@@ -60,13 +67,6 @@ A growing, linked wiki of software, data and ML. One deep lesson a day.<br>
 <b><a href="https://github.com/tejalgoyal2/sudoku-app">sudoku</a></b><br>
 A calm, ad-free Sudoku for phone and laptop: daily puzzle, hints that teach, challenges, 11 themes, offline. Built out of pure spite.<br>
 <sub>JavaScript · updated today</sub>
-<br clear="left">
-</p>
-<p>
-<a href="https://github.com/tejalgoyal2/lockin"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/thumb-lockin-dark.svg"><img alt="lockin, preview" src="edition/thumb-lockin-light.svg" width="172" align="left"></picture></a>
-<b><a href="https://github.com/tejalgoyal2/lockin">lockin</a></b><br>
-A job-hunting intern that never asks for coffee: it scans public job lists twice a day and files the best new entry-level roles.<br>
-<sub>Python · updated today</sub>
 <br clear="left">
 </p>
 
