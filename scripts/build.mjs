@@ -8,11 +8,11 @@ import path from 'node:path';
 import { execSync } from 'node:child_process';
 import sharp from 'sharp';
 import { fileURLToPath } from 'node:url';
-import { collect, probe } from './collect.mjs';
+import { collect, probe, weeklyCommits } from './collect.mjs';
 import { select, describe } from './select.mjs';
 import { preview } from './previews.mjs';
-import { heroProfile, heroSkyline, card, activity, activityHeight, stats, calendarFacts, linkButton, social, ICON_FOR } from './render.mjs';
-import { readme, cardFile, linkFile } from './readme.mjs';
+import { heroSkyline, thumb, activity, activityHeight, stats, calendarFacts, social } from './render.mjs';
+import { readme, thumbFile } from './readme.mjs';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = new Set(process.argv.slice(2));
@@ -84,6 +84,23 @@ for (const r of shown) {
 }
 await browser?.close();
 
+// what a project with no picture draws instead: its own commits, week by week (kept in the cache, so a redraw needs no network)
+data.rhythm ||= {};
+if (!cached) {
+  await Promise.all(
+    cards.filter((c) => !c.pic).map(async (c) => {
+      const w = await weeklyCommits(config.user, c.d.name, token);
+      if (w) data.rhythm[c.d.name] = w;
+      else log(`  ! ${c.d.name}: no commit history yet, so its thumbnail is a plain grid`);
+    }),
+  );
+  fs.writeFileSync(cacheFile, JSON.stringify(data));
+}
+// a picture is drawn at 160 x 100, so it is stored here at 2.5x and nothing bigger is ever embedded
+for (const c of cards) {
+  if (c.pic) c.pic = { mime: 'image/jpeg', b64: (await sharp(Buffer.from(c.pic.b64, 'base64')).resize(400, 250, { fit: 'cover', position: 'north' }).jpeg({ quality: 72, mozjpeg: true }).toBuffer()).toString('base64') };
+}
+
 // the avatar, re-encoded as a small plain JPEG (saved, so a cached run needs no network)
 const avatarFile = path.join(root, 'assets', 'avatar.jpg');
 if (!cached && data.profile?.avatar) {
@@ -116,10 +133,8 @@ const hasStats = !!cal && !!config.show?.stats;
 const hasActivity = !!config.show?.activity;
 
 for (const theme of ['light', 'dark']) {
-  put(`hero-profile-${theme}.svg`, heroProfile(theme, { name: config.name, handle: config.handle, tagline: config.tagline, avatar, last: commits[0] || null }, now));
   if (cal) put(`hero-skyline-${theme}.svg`, heroSkyline(theme, { weeks: cal.weeks, total: cal.total }));
-  for (const [label] of Object.entries(config.links)) put(`${linkFile(label)}-${theme}.svg`, linkButton(theme, label, ICON_FOR[label]));
-  for (const { d, pic } of cards) put(`${cardFile(d.name)}-${theme}.svg`, card(theme, { ...d, image: pic }, now));
+  for (const { d, pic } of cards) put(`${thumbFile(d.name)}-${theme}.svg`, thumb(theme, { ...d, image: pic, rhythm: data.rhythm[d.name] }));
   const ph = Math.max(activityHeight(commits.length), 620); // the activity and stats panels sit side by side, so they share a height
   if (config.show?.activity && commits.length >= 2) put(`activity-${theme}.svg`, activity(theme, commits, now, ph));
   if (config.show?.stats && cal) {
@@ -160,7 +175,7 @@ const notes = [
   ...data.warnings.map((w) => `- ⚠️ ${w}`),
   ...sel.missingLeads.map((n) => `- ⚠️ \`lead\` names "${n}", which isn't a public repo.`),
   ...(sel.silent.length ? [`- Not shown, because they have no description, site or topics: ${sel.silent.map((n) => `\`${n}\``).join(', ')}. Add a description on GitHub (or a \`repos\` entry in config.json) to bring one in.`] : []),
-  ...cards.filter((c) => !c.pic).map((c) => `- ${c.d.title}: no picture found, so its card uses cover art.`),
+  ...cards.filter((c) => !c.pic).map((c) => `- ${c.d.title}: no picture found, so its thumbnail is drawn from its commits.`),
 ];
 log('\n' + notes.join('\n'));
 if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, notes.join('\n') + '\n');

@@ -172,6 +172,30 @@ export async function collect(config, { token, publicOnly = true, log = () => {}
   return { repos, wire, calendar, posts, site, profile, languages, warnings, collectedAt: new Date().toISOString() };
 }
 
+/**
+ * Commits per week over the last year for one repo, oldest first, counted from its commit list
+ * (up to 300 commits; a commit dated in the future counts as now, as everywhere else here).
+ * null when there's nothing to count.
+ */
+export async function weeklyCommits(user, name, token, now = Date.now()) {
+  const week = 7 * 864e5, since = new Date(now - 52 * week).toISOString();
+  const weeks = Array(52).fill(0);
+  try {
+    for (let page = 1; page <= 3; page++) {
+      const list = await gh(`/repos/${user}/${name}/commits?since=${since}&per_page=100&page=${page}`, token);
+      for (const c of list) {
+        const at = Math.min(new Date(c.commit.author.date).getTime(), now);
+        const ago = Math.floor((now - at) / week);
+        if (ago >= 0 && ago < 52) weeks[51 - ago]++;
+      }
+      if (list.length < 100) break;
+    }
+  } catch {
+    return null;
+  }
+  return weeks.some(Boolean) ? weeks : null;
+}
+
 /** Is the project's own site up, and does it publish a share image? */
 export async function probe(url) {
   try {

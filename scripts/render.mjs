@@ -1,16 +1,15 @@
 // The pieces of the profile, drawn as SVG in GitHub's own look: Primer's colours (light and dark
 // are each designed on their own, not one flipped into the other), GitHub's typefaces, and the
-// shapes of GitHub's own components (repo cards, labels, topic chips, the language bar, the
-// contribution greens). What's new is made out of the data:
-//   hero      your name over an isometric skyline of the last year's contributions
-//   card      a repo card with a picture on top (its own share image, a screenshot, or a
-//             generated commit-grid cover tinted in its language's colour)
-//   activity  your latest commits as a git graph, one lane per repo
-//   stats     the year in numbers and a language bar
-// Every word is an outline (scripts/type.mjs). Motion is CSS only: the base state is always the
-// finished picture, animations only ever dip away from it and come back, and with
-// prefers-reduced-motion they simply don't run.
-import { line, block, measure, fitSize } from './type.mjs';
+// contribution greens. What's new is made out of the data:
+//   skyline   the last year's contributions as an isometric skyline that rises when you arrive
+//   thumb     a small picture for a project: its own share image or a screenshot, or, when it has
+//             neither, its commits drawn as towers of little blocks in its language's colour
+//   activity  your latest commits as a git graph, one lane per repo (off unless switched on)
+//   stats     the year in numbers and a language bar (off unless switched on)
+// Every word is an outline (scripts/type.mjs). Motion is CSS only and runs once, on arrival; the
+// base state is always the finished picture, so with prefers-reduced-motion, or in anything that
+// doesn't run animations, you simply see it done.
+import { line, block, measure } from './type.mjs';
 
 export const THEMES = {
   light: {
@@ -77,15 +76,7 @@ function pill(t, text, x, y, { color, bg = 'none', border = color, dot = false, 
   };
 }
 
-const star = (cx, cy, r, fill) => {
-  const p = Array.from({ length: 10 }, (_, i) => {
-    const a = -Math.PI / 2 + (i * Math.PI) / 5, rad = i % 2 ? r * 0.42 : r;
-    return `${r1(cx + Math.cos(a) * rad)},${r1(cy + Math.sin(a) * rad)}`;
-  });
-  return `<polygon points="${p.join(' ')}" fill="${fill}"/>`;
-};
-
-// ─── the hero: name over a skyline of the year ───────────────────────────────
+// ─── the year as a skyline ───────────────────────────────────────────────────
 
 /** The contribution calendar as an isometric bar chart, in GitHub's greens. */
 export function skyline(t, weeks, cx, top, s = 10, H = 84) {
@@ -107,88 +98,42 @@ export function skyline(t, weeks, cx, top, s = 10, H = 84) {
         ? `<polygon points="${P([X - A, Y - h], [X, Y - h + B], [X, Y + B], [X - A, Y])}" fill="${shade(c, 0.78)}"/>` +
           `<polygon points="${P([X + A, Y - h], [X, Y - h + B], [X, Y + B], [X + A, Y])}" fill="${shade(c, 0.6)}"/>`
         : '';
-      const delay = (((i + j) / (weeks.length + 6)) * 3.2).toFixed(2);
-      return h ? `<g class="w" style="animation-delay:${delay}s">${sides}${topFace}</g>` : topFace;
+      const f = (i + j) / (weeks.length + 6);
+      return h ? `<g class="w" style="--d:${(f * 1.6).toFixed(2)}s;--e:${(2.4 + f * 3.4).toFixed(2)}s">${sides}${topFace}</g>` : topFace;
     })
     .join('');
 }
 
-// The hero is two panels that flow like the cards: side by side on a desktop, stacked (and so
-// twice as readable) on a phone. Each is drawn 640 x 560 with a 10px transparent margin around it.
-const panel = (w, h, title, desc, css, body) => svg(w + 20, h + 20, { title, desc, css }, `<g transform="translate(10 10)">${body}</g>`);
-
 /**
- * The left panel: who I am, and the latest thing I pushed.
- * @param data {{ name:string, handle:string, tagline:string, avatar?:{mime:string,b64:string},
- *               last?:{repo:string,msg:string,at:string,sha:string}|null }}
+ * The year as one wide picture: the number on the left, the skyline rising on the right.
+ * No frame, so it sits on the page the way GitHub's own contribution graph does.
  */
-export function heroProfile(theme, data, now = new Date()) {
-  const t = THEMES[theme];
-  const W = 640, H = 560, L = 40;
-  const out = [frame(t, W, H)];
-
-  const ax = L + 46, ay = 92, ar = 44;
-  out.push(`<clipPath id="av"><circle cx="${ax}" cy="${ay}" r="${ar}"/></clipPath>`);
-  out.push(
-    data.avatar
-      ? `<image clip-path="url(#av)" href="data:${data.avatar.mime};base64,${data.avatar.b64}" x="${ax - ar}" y="${ay - ar}" width="${ar * 2}" height="${ar * 2}"/>`
-      : `<circle cx="${ax}" cy="${ay}" r="${ar}" fill="${t.subtle}"/>` + T('bold', data.name[0], ax, ay + 16, 46, t.fg, { anchor: 'middle' }),
-  );
-  out.push(`<circle cx="${ax}" cy="${ay}" r="${ar}" fill="none" stroke="${t.border}" stroke-width="3"/>`);
-  const ns = Math.min(50, fitSize('bold', data.name, W - ax - ar - 24 - L - 8));
-  out.push(T('bold', data.name, ax + ar + 22, ay - 2, ns, t.fg));
-  out.push(T('mono', `@${data.handle}`, ax + ar + 24, ay + 32, 20, t.muted));
-
-  const tg = block('text', data.tagline, L, 204, 34, W - 2 * L, { lead: 46, maxLines: 3 });
-  out.push(path(tg.d, t.fg));
-
-  // the latest push, set the way GitHub sets the latest commit at the top of a repo page
-  if (data.last) {
-    const bw = W - 2 * L, bh = 124, bx = L, by = H - 30 - bh;
-    out.push(`<circle class="pulse" cx="${bx + 7}" cy="${by - 18}" r="5" fill="${t.green}"/>`);
-    out.push(T('mono', 'LATEST PUSH', bx + 22, by - 13, 14, t.muted, { tracking: 0.14 }));
-    out.push(`<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="12" fill="${t.subtle}" stroke="${t.border}" stroke-width="1.5"/>`);
-    const kx = bx + 28, ky = by + 30;
-    out.push(`<clipPath id="av2"><circle cx="${kx}" cy="${ky}" r="15"/></clipPath>`);
-    out.push(data.avatar ? `<image clip-path="url(#av2)" href="data:${data.avatar.mime};base64,${data.avatar.b64}" x="${kx - 15}" y="${ky - 15}" width="30" height="30"/>` : `<circle cx="${kx}" cy="${ky}" r="15" fill="${t.border}"/>`);
-    out.push(`<circle cx="${kx}" cy="${ky}" r="15" fill="none" stroke="${t.border}" stroke-width="1.5"/>`);
-    let x = bx + 54;
-    for (const [f, txt, col] of [['semibold', data.handle, t.fg], ['text', ' committed to ', t.muted], ['mono', data.last.repo, t.accent], ['text', ` ${ago(data.last.at, now)}`, t.muted]]) {
-      const size = f === 'mono' ? 15 : 17;
-      if (x + measure(f, txt, size) > bx + bw - 110) break; // leave room for the hash
-      out.push(T(f, txt, x, ky + 6, size, col));
-      x += measure(f, txt, size);
-    }
-    const sha = data.last.sha.slice(0, 7), sw = measure('mono', sha, 14) + 20;
-    out.push(`<rect x="${bx + bw - 14 - sw}" y="${by + 14}" width="${r1(sw)}" height="28" rx="8" fill="${t.canvas}" stroke="${t.border}" stroke-width="1.5"/>`);
-    out.push(T('mono', sha, bx + bw - 14 - sw + 10, by + 33, 14, t.muted));
-    out.push(path(block('semibold', data.last.msg, bx + 22, by + 78, 19, bw - 44, { lead: 25, maxLines: 2 }).d, t.fg));
-  }
-  const css = `.pulse{animation:pulse 2s ease-in-out infinite}@keyframes pulse{50%{opacity:.3}}`;
-  return panel(W, H, data.name, `${data.name} (@${data.handle}). ${data.tagline}${data.last ? ` Latest push: ${data.last.repo}: ${data.last.msg}.` : ''}`, css, out.join(''));
-}
-
-/** The right panel: the last year's contributions as a skyline, in GitHub's greens. */
 export function heroSkyline(theme, data) {
   const t = THEMES[theme];
-  const W = 640, H = 560;
-  const out = [frame(t, W, H)];
-  out.push(T('bold', data.total.toLocaleString('en-US'), 40, 90, 60, t.fg));
-  out.push(T('text', 'contributions in the last year', 40 + measure('bold', data.total.toLocaleString('en-US'), 60) + 16, 88, 20, t.muted));
-  out.push(skyline(t, data.weeks, W / 2, 112));
+  const W = 860, H = 372;
+  const out = [];
+  const total = data.total.toLocaleString('en-US');
+  out.push(T('bold', total, 4, 70, 72, t.fg));
+  out.push(T('text', 'contributions in the last year', 6, 106, 22, t.muted));
   // the legend GitHub puts under its own contribution graph
-  out.push(T('mono', 'Less', 40, H - 28, 14, t.muted));
-  let x = 40 + measure('mono', 'Less', 14) + 10;
+  out.push(T('mono', 'Less', 6, H - 12, 15, t.muted));
+  let x = 6 + measure('mono', 'Less', 15) + 10;
   for (const c of t.contrib) {
-    out.push(`<rect x="${x}" y="${H - 42}" width="14" height="14" rx="3" fill="${c}"/>`);
-    x += 20;
+    out.push(`<rect x="${x}" y="${H - 26}" width="15" height="15" rx="3" fill="${c}"/>`);
+    x += 21;
   }
-  out.push(T('mono', 'More', x + 4, H - 28, 14, t.muted));
-  const css = `.w{animation:wave 7s ease-in-out infinite}@keyframes wave{0%,55%,100%{opacity:1}28%{opacity:.5}}`;
-  return panel(W, H, 'Contributions', `${data.total} contributions in the last year, drawn as an isometric skyline: taller, darker towers are busier days.`, css, out.join(''));
+  out.push(T('mono', 'More', x + 4, H - 12, 15, t.muted));
+  out.push(skyline(t, data.weeks, 556, 0, 9.4, 82));
+  // each tower grows up from the ground once, in a wave from the oldest day to the newest, then a slow light passes over them
+  const css =
+    `.w{transform-box:fill-box;transform-origin:50% 100%;animation-name:rise,glint;animation-duration:1.1s,10s;` +
+    `animation-timing-function:cubic-bezier(.2,.7,.2,1),ease-in-out;animation-delay:var(--d),var(--e);` +
+    `animation-iteration-count:1,infinite;animation-fill-mode:backwards,none}` +
+    `@keyframes rise{from{transform:scaleY(0)}}@keyframes glint{0%,60%,100%{opacity:1}30%{opacity:.55}}`;
+  return svg(W, H, { title: 'Contributions', desc: `${data.total} contributions in the last year, drawn as an isometric skyline: taller, darker towers are busier days.`, css }, out.join(''));
 }
 
-// ─── cover art for repos with nothing to show: a commit grid in the language's colour ─────
+// ─── a project's picture ─────────────────────────────────────────────────────
 
 const seeded = (str) => {
   let s = 2166136261;
@@ -196,13 +141,44 @@ const seeded = (str) => {
   return () => ((s = (Math.imul(s ^ (s >>> 15), 2246822507) + 1013904223) >>> 0) / 4294967296);
 };
 
+/**
+ * A repo's life as a skyline: one tower per week, and every block in it is a commit (a block is a few
+ * commits when a week was busy). Young repos fill the picture; the newest week is on the right.
+ * @param weeks number[] commits per week, oldest first (up to 52)
+ */
+export function commitTowers(theme, weeks, lang, w, h) {
+  const t = THEMES[theme];
+  const base = langColor(lang);
+  const ramp = [mix(t.subtle, base, 0.4), mix(t.canvas, base, 0.6), mix(t.canvas, base, 0.82), base];
+  const from = Math.max(0, weeks.findIndex((v) => v > 0));
+  const active = weeks.slice(from);
+  const n = Math.max(22, active.length), pad = 16;
+  const pitch = (w - 2 * pad) / n, sq = pitch * 0.8;
+  const rows = Math.floor((h - 2 * pad) / pitch), top = (h - rows * pitch) / 2;
+  const max = Math.max(1, ...active), k = Math.ceil(max / rows);
+  const empty = mix(t.subtle, t.border, 0.55);
+  const rect = (c, r, fill) => `<rect x="${r1(pad + c * pitch + (pitch - sq) / 2)}" y="${r1(top + r * pitch + (pitch - sq) / 2)}" width="${r1(sq)}" height="${r1(sq)}" rx="${r1(sq * 0.24)}" fill="${fill}"/>`;
+  // the unlit grid first, like GitHub's empty contribution squares; a commit lights one, from the ground up
+  const out = [];
+  for (let c = 0; c < n; c++) for (let r = 0; r < rows; r++) out.push(rect(c, r, empty));
+  active.forEach((v, i) => {
+    if (!v) return;
+    const c = n - active.length + i, lit = Math.min(rows, Math.ceil(v / k));
+    const col = ramp[Math.min(3, Math.ceil((4 * v) / max) - 1)];
+    const blocks = Array.from({ length: lit }, (_, q) => rect(c, rows - 1 - q, col));
+    out.push(`<g class="c" style="--d:${(0.1 + (c / n) * 0.9).toFixed(2)}s">${blocks.join('')}</g>`);
+  });
+  return out.join('');
+}
+
+/** For a repo with no history to draw: a quiet grid of commit squares in the language's colour, the same for the same name. */
 export function cover(theme, title, lang, x, y, w, h) {
   const t = THEMES[theme];
   const rnd = seeded(title);
   const base = langColor(lang);
   const ramp = [t.contrib[0], mix(t.canvas, base, 0.3), mix(t.canvas, base, 0.55), mix(t.canvas, base, 0.8), base];
-  const waves = Array.from({ length: 3 }, () => ({ fx: 0.02 + rnd() * 0.05, fy: 0.03 + rnd() * 0.08, p: rnd() * 6.28 }));
-  const pitch = 24, size = 19;
+  const waves = Array.from({ length: 3 }, () => ({ fx: 0.03 + rnd() * 0.06, fy: 0.04 + rnd() * 0.1, p: rnd() * 6.28 }));
+  const pitch = 20, size = 16;
   const cells = [];
   for (let j = 0; j * pitch < h; j++)
     for (let i = 0; i * pitch < w; i++) {
@@ -210,64 +186,27 @@ export function cover(theme, title, lang, x, y, w, h) {
       const level = v < -0.12 ? 0 : v < 0.08 ? 1 : v < 0.26 ? 2 : v < 0.4 ? 3 : 4;
       cells.push(`<rect x="${i * pitch + 3}" y="${j * pitch + 3}" width="${size}" height="${size}" rx="4" fill="${ramp[level]}"/>`);
     }
-  const label = Math.min(66, fitSize('bold', title, w - 150));
-  const tw = measure('bold', title, label);
-  return (
-    `<g transform="translate(${x} ${y})"><clipPath id="cv"><rect width="${w}" height="${h}"/></clipPath><rect width="${w}" height="${h}" fill="${t.subtle}"/>` +
-    `<g clip-path="url(#cv)">${cells.join('')}</g>` +
-    `<rect x="36" y="${h - 96}" width="${r1(tw + 52)}" height="${r1(label + 38)}" rx="12" fill="${t.canvas}" stroke="${t.border}" stroke-width="2"/>` +
-    T('bold', title, 62, h - 96 + label + 4, label, t.fg) +
-    `</g>`
-  );
+  return `<g transform="translate(${x} ${y})"><rect width="${w}" height="${h}" fill="${t.subtle}"/>${cells.join('')}</g>`;
 }
 
-// ─── a project card: GitHub's repo card, with a picture on top ───────────────
-
 /**
- * A repo card, as quiet as GitHub's own: a picture, "owner / name", what it is, and a footer.
- * @param repo {{ name:string, title:string, blurb:string, lang?:string, stars:number, forks?:number, pushed:string,
- *               owner:string, image?:{mime:string,b64:string} }}
+ * A project's thumbnail, 160 x 100 on the page (drawn at twice that): its own picture if it has one,
+ * else its commits as towers, else a plain grid. Small on purpose: the words beside it are the card.
+ * @param repo {{ title:string, blurb:string, lang?:string, image?:{mime:string,b64:string}, rhythm?:number[]|null }}
  */
-export function card(theme, repo, now = new Date()) {
+export function thumb(theme, repo) {
   const t = THEMES[theme];
-  const W = 800, H = 520, IH = 300, P = 36;
-  const out = [];
-  out.push(`<clipPath id="r"><rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="18"/></clipPath>`);
-  out.push(`<rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="18" fill="${t.canvas}"/>`);
-  out.push(`<g clip-path="url(#r)">`);
+  const W = 320, H = 200, R = 16;
+  const out = [`<clipPath id="r"><rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="${R}"/></clipPath>`, `<g clip-path="url(#r)">`];
+  const towers = !repo.image && repo.rhythm && repo.rhythm.reduce((a, b) => a + b, 0) >= 3;
   if (repo.image) {
-    out.push(`<rect width="${W}" height="${IH}" fill="${t.subtle}"/>`);
-    out.push(`<image href="data:${repo.image.mime};base64,${repo.image.b64}" width="${W}" height="${IH}" preserveAspectRatio="xMidYMin slice"/>`);
-  } else out.push(cover(theme, repo.title, repo.lang, 0, 0, W, IH));
-  out.push(`<rect y="${IH}" width="${W}" height="2" fill="${t.border}"/></g>`);
-  out.push(`<rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="18" fill="none" stroke="${t.border}" stroke-width="2"/>`);
-
-  // "owner / name": the owner muted, the name in link blue, as on GitHub
-  const ty = IH + 62;
-  out.push(`<rect x="${P}" y="${ty - 22}" width="20" height="26" rx="3" fill="none" stroke="${t.muted}" stroke-width="2.5"/><rect x="${P + 4}" y="${ty - 7}" width="12" height="2.5" fill="${t.muted}"/>`);
-  const slash = `${repo.owner} / `;
-  const nsz = Math.min(32, fitSize('semibold', slash + repo.title, W - 2 * P - 36));
-  const sw = measure('text', slash, nsz);
-  out.push(T('text', slash, P + 34, ty, nsz, t.muted));
-  out.push(T('semibold', repo.title, P + 34 + sw, ty, nsz, t.accent));
-
-  out.push(path(block('text', repo.blurb, P, ty + 50, 25, W - 2 * P, { lead: 34, maxLines: 2 }).d, t.muted));
-
-  // foot: language, stars, updated
-  const fy = H - 34;
-  let fx = P;
-  if (repo.lang) {
-    out.push(`<circle cx="${fx + 8}" cy="${fy - 7}" r="8" fill="${langColor(repo.lang)}"/>`);
-    const l = line('text', repo.lang, fx + 26, fy, 21);
-    out.push(path(l.d, t.muted));
-    fx += 26 + l.width + 26;
-  }
-  if (repo.stars > 0) {
-    out.push(star(fx + 9, fy - 7, 10, t.muted));
-    out.push(T('text', String(repo.stars), fx + 28, fy, 21, t.muted));
-  }
-  out.push(T('text', `Updated ${ago(repo.pushed, now)}`, W - P, fy, 21, t.muted, { anchor: 'end' }));
-  return svg(W + 20, H + 20, { title: repo.title, desc: `${repo.title}: ${repo.blurb}` }, `<g transform="translate(10 10)">${out.join('')}</g>`);
+    out.push(`<rect width="${W}" height="${H}" fill="${t.subtle}"/>`);
+    out.push(`<image href="data:${repo.image.mime};base64,${repo.image.b64}" width="${W}" height="${H}" preserveAspectRatio="xMidYMin slice"/>`);
+  } else if (towers) out.push(`<rect width="${W}" height="${H}" fill="${t.subtle}"/>` + commitTowers(theme, repo.rhythm, repo.lang, W, H));
+  else out.push(cover(theme, repo.title, repo.lang, 0, 0, W, H));
+  out.push(`</g><rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="${R}" fill="none" stroke="${t.border}" stroke-width="2"/>`);
+  const css = `.c{transform-box:fill-box;transform-origin:50% 100%;animation:rise 1s cubic-bezier(.2,.7,.2,1) var(--d) backwards}@keyframes rise{from{transform:scaleY(0)}}`;
+  return svg(W, H, { title: repo.title, desc: `${repo.title}: ${repo.blurb}`, css }, out.join(''));
 }
 
 // ─── recent commits as a git graph ───────────────────────────────────────────
@@ -374,32 +313,6 @@ export function calendarFacts(weeks) {
     if (d.count > 0 && (!busiest || d.count > busiest.count)) busiest = d;
   }
   return { streak: best, busiest: busiest ? { count: busiest.count, label: new Date(busiest.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }) } : null };
-}
-
-// ─── link buttons with icons ─────────────────────────────────────────────────
-
-// 24 x 24 icons: [paths drawn as outlines, paths drawn filled]
-const ICONS = {
-  globe: ['<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>', ''],
-  pencil: ['<path d="M4 20l1-5L16 4l4 4L9 19z"/><path d="M14 6l4 4"/>', ''],
-  doc: ['<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>', ''],
-  mail: ['<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 8l8 5.5L20 8"/>', ''],
-  code: ['<path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/>', ''],
-  external: ['<path d="M8 16L17 7M9 7h8v8"/>', ''],
-  linkedin: ['', '<path fill-rule="evenodd" d="M5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-13A2.5 2.5 0 0 1 5.5 3zM7 10v7h2.2v-7H7zm1.1-3.4a1.3 1.3 0 1 0 0 2.6 1.3 1.3 0 0 0 0-2.6zM11 10v7h2.2v-3.8c0-1 .6-1.6 1.4-1.6.8 0 1.2.5 1.2 1.5V17H18v-4.2c0-2-1-3-2.6-3-.9 0-1.7.4-2.2 1.1V10H11z"/>'],
-};
-export const ICON_FOR = { Portfolio: 'globe', Site: 'globe', Blog: 'pencil', LinkedIn: 'linkedin', Resume: 'doc', Email: 'mail', Code: 'code', Live: 'external' };
-
-/** A button with an icon, in GitHub's button style. 44px tall; its width follows its label. */
-export function linkButton(theme, label, icon = 'globe') {
-  const t = THEMES[theme];
-  const size = 19, tw = measure('semibold', label, size), W = Math.round(20 + 24 + 10 + tw + 22), H = 44;
-  const [stroke, fill] = ICONS[icon] || ICONS.globe;
-  const body =
-    `<rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="10" fill="${t.subtle}" stroke="${t.border}" stroke-width="2"/>` +
-    `<g transform="translate(18 10)" fill="none" stroke="${t.accent}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${stroke}<g fill="${t.accent}" stroke="none">${fill}</g></g>` +
-    T('semibold', label, 54, H / 2 + size * 0.35, size, t.fg);
-  return svg(W, H, { title: label, desc: label }, body);
 }
 
 // ─── the picture for a shared link ───────────────────────────────────────────

@@ -1,6 +1,7 @@
 // README.md, laid out the way GitHub lays out everything else: plain sections with GitHub's own
-// headings, a picture where a picture says it best. Every picture is also here as text (its alt
-// text, the table, the lists), because that's what search engines and AI models read.
+// headings, text you can select and links you can follow, and a picture only where a picture helps
+// (the year as a skyline, a small thumbnail by each project). Everything a picture shows is also
+// here as text, because that's what search engines and AI models read.
 import { ago } from './render.mjs';
 
 const clip = (s, n) => (s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : s);
@@ -10,39 +11,30 @@ const md = (s) => String(s).replace(/([\\`*_{}[\]<>|])/g, '\\$1');
 const picture = (base, alt, extra = 'width="100%"') =>
   `<picture><source media="(prefers-color-scheme: dark)" srcset="edition/${base}-dark.svg"><img alt="${esc(alt)}" src="edition/${base}-light.svg" ${extra}></picture>`;
 
-export const cardFile = (name) => `card-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+export const thumbFile = (name) => `thumb-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 
-const slug = (k) => k.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-export const linkFile = (label) => `link-${slug(label)}`;
+// the links are an ordinary line of links, like any README's
+const ICON = { Portfolio: '🌐', Site: '🌐', Blog: '✍️', LinkedIn: '💼', Resume: '📄', Email: '✉️', GitHub: '🐙' };
+const links = (L) => Object.entries(L).map(([k, url]) => `${ICON[k] || '🔗'} [${md(k)}](${url})`).join(' · ');
 
-// A card is one image, and it opens the repository: that's where a click on a repo card goes on
-// GitHub, and it keeps people on GitHub. Cards flow like text instead of sitting in a table, so two
-// sit side by side on a desktop and they stack, full width and readable, on a phone.
-const cardLink = (d) =>
-  `<a href="${esc(d.repoUrl)}">${picture(cardFile(d.name), `${d.title}: ${d.blurb}${d.lang ? ` (${d.lang})` : ''}${d.host ? `, live at ${d.host}` : ''}. Opens the repository.`, 'width="402"')}</a>`;
-
-const cards = (list) => `<p>\n${list.map(cardLink).join('\n')}\n</p>`;
-
-const buttons = (links) =>
-  `<p>\n${Object.keys(links)
-    .map((k) => `<a href="${esc(links[k])}">${picture(linkFile(k), k, 'height="36"')}</a>`)
-    .join('\n')}\n</p>`;
+// One project: a small picture, then the name (a link to the repository, which is where a click on a
+// repo is expected to go) and what it is. The words are the card; the picture is a thumbnail.
+const meta = (d, now) => [d.lang, d.stars > 0 ? `★ ${d.stars}` : '', `updated ${ago(d.pushed, now)}`].filter(Boolean).join(' · ');
+const row = (d, now) =>
+  `<tr>\n<td width="176" valign="top"><a href="${esc(d.repoUrl)}">${picture(thumbFile(d.name), `${d.title}, preview`, 'width="160"')}</a></td>\n` +
+  `<td valign="top"><b><a href="${esc(d.repoUrl)}">${esc(d.title)}</a></b><br>${esc(clip(d.blurb, 140))}<br><sub>${esc(meta(d, now))}</sub></td>\n</tr>`;
 
 export function readme({ config, now, leads, fresh, brief, wire, calendar, posts, hasStats, hasActivity }) {
-  const L = config.links;
   const day = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
   const out = [];
 
-  const latest = wire[0] ? ` Latest push: ${wire[0].repo}: ${wire[0].msg}.` : '';
-  out.push(
-    `<p>\n${picture('hero-profile', `${config.name} (@${config.handle}). ${config.tagline}${latest}`, 'width="402"')}\n` +
-      (calendar ? `${picture('hero-skyline', `${calendar.total} contributions in the last year, as a skyline of towers: taller means a busier day.`, 'width="402"')}\n` : '') +
-      `</p>\n\n${buttons(L)}\n`,
-  );
+  // the year, then who I am (once: the name and photo are already in GitHub's own sidebar), then where else to find me
+  if (calendar) out.push(`${picture('hero-skyline', `${calendar.total} contributions in the last year, as a skyline of towers: taller means a busier day.`)}\n`);
   out.push(`${config.about}\n`);
+  out.push(`${links(config.links)}\n`);
 
   // the curated projects first, then whatever I've pushed to lately that isn't one of them: new repos join by themselves
-  out.push(`## Projects\n\n${cards([...leads, ...fresh])}\n`);
+  out.push(`## Projects\n\n<table>\n${[...leads, ...fresh].map((d) => row(d, now)).join('\n')}\n</table>\n`);
 
   const showActivity = hasActivity && wire.length >= 2, showStats = hasStats && calendar;
   if (showActivity || showStats) {
@@ -55,14 +47,7 @@ export function readme({ config, now, leads, fresh, brief, wire, calendar, posts
   }
 
   if (brief.length) {
-    out.push(
-      `## More\n\n| Project | What it is | Built with |\n| :-- | :-- | :-- |\n` +
-        brief
-          .slice(0, 16)
-          .map((d) => `| **[${md(d.title)}](${d.repoUrl})** | ${md(clip(d.blurb, 150))} | ${d.lang || ''} |`)
-          .join('\n') +
-        '\n',
-    );
+    out.push(`## More\n\n` + brief.slice(0, 16).map((d) => `- **[${md(d.title)}](${d.repoUrl})**: ${md(clip(d.blurb, 150))}${d.lang ? ` <sub>${md(d.lang)}</sub>` : ''}`).join('\n') + '\n');
   }
 
   if (posts.length) {
