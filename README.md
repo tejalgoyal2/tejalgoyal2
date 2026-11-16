@@ -1,4 +1,4 @@
-<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-skyline-dark.svg"><img alt="786 contributions in the last year, as a skyline of towers: taller means a busier day." src="edition/hero-skyline-light.svg" width="100%"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-skyline-dark.svg"><img alt="801 contributions in the last year, as a skyline of towers: taller means a busier day." src="edition/hero-skyline-light.svg" width="100%"></picture>
 
 I build AI agents that talk to real systems, data pipelines that hold up, and small things that are fun to use. I’m finishing an M.Eng. in Applied Data Science (December 2026). Off the clock: F1 every race weekend, speedcubing, and a serious banana bread.
 
@@ -23,4 +23,4 @@ I build AI agents that talk to real systems, data pipelines that hold up, and sm
 <a href="https://github.com/tejalgoyal2/sudoku-app"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-sudoku-app-dark.svg"><img alt="sudoku: Nine boxes, nine digits, zero ads. A calm Sudoku built out of pure spite. (JavaScript). Opens the repository." src="edition/card-sudoku-app-light.svg" width="402"></picture></a>
 </p>
 
-<div align="center"><sub>Updated November 13, 2026 · rebuilt every Monday · <a href="https://github.com/tejalgoyal2/tejalgoyal2/blob/main/docs/how-it-works.md">how it works</a></sub></div>
+<div align="center"><sub>Updated November 16, 2026 · rebuilt every Monday · <a href="https://github.com/tejalgoyal2/tejalgoyal2/blob/main/docs/how-it-works.md">how it works</a></sub></div>
