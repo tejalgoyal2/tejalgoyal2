@@ -1,4 +1,4 @@
-<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-skyline-dark.svg"><img alt="801 contributions in the last year, as a skyline of towers: taller means a busier day." src="edition/hero-skyline-light.svg" width="100%"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="edition/hero-skyline-dark.svg"><img alt="829 contributions in the last year, as a skyline of towers: taller means a busier day." src="edition/hero-skyline-light.svg" width="100%"></picture>
 
 I build AI agents that talk to real systems, data pipelines that hold up, and small things that are fun to use. I’m finishing an M.Eng. in Applied Data Science (December 2026). Off the clock: F1 every race weekend, speedcubing, and a serious banana bread.
 
@@ -20,7 +20,8 @@ I build AI agents that talk to real systems, data pipelines that hold up, and sm
 <a href="https://github.com/tejalgoyal2/claubi"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-claubi-dark.svg"><img alt="claubi: A coding agent that doesn’t trust the code it writes, and asks before it acts. Rust, on your machine. (Rust). Opens the repository." src="edition/card-claubi-light.svg" width="402"></picture></a>
 <a href="https://github.com/tejalgoyal2/lockin"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-lockin-dark.svg"><img alt="lockin: A job-hunting intern that never asks for coffee. Scans job lists twice a day and files the best new roles. (Python). Opens the repository." src="edition/card-lockin-light.svg" width="402"></picture></a>
 <a href="https://github.com/tejalgoyal2/wiki"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-wiki-dark.svg"><img alt="wiki: One deep lesson a day, wired into a growing wiki of software, data and ML. (TypeScript). Opens the repository." src="edition/card-wiki-light.svg" width="402"></picture></a>
+<a href="https://github.com/tejalgoyal2/clearance"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-clearance-dark.svg"><img alt="clearance: an open-source license compliance checker. You upload a Maven or npm dependency file. It finds every dependency’s license, checks it against a deny-first policy, and sends anything flagged to a reviewer, with an audit trail. (Java). Opens the repository." src="edition/card-clearance-light.svg" width="402"></picture></a>
 <a href="https://github.com/tejalgoyal2/sudoku-app"><picture><source media="(prefers-color-scheme: dark)" srcset="edition/card-sudoku-app-dark.svg"><img alt="sudoku: Nine boxes, nine digits, zero ads. A calm Sudoku built out of pure spite. (JavaScript). Opens the repository." src="edition/card-sudoku-app-light.svg" width="402"></picture></a>
 </p>
 
-<div align="center"><sub>Updated November 16, 2026 · rebuilt every Monday · <a href="https://github.com/tejalgoyal2/tejalgoyal2/blob/main/docs/how-it-works.md">how it works</a></sub></div>
+<div align="center"><sub>Updated November 24, 2026 · rebuilt every Monday · <a href="https://github.com/tejalgoyal2/tejalgoyal2/blob/main/docs/how-it-works.md">how it works</a></sub></div>
